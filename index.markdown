@@ -24,9 +24,21 @@ Pellentesque enim dui, interdum elementum vehicula luctus, feugiat vitae arcu.
 Vestibulum ut felis justo. Quisque vestibulum mauris eget ipsum luctus
 consequat.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.haskell .numberLines}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.haskell}
+-- | Inefficient quicksort in haskell.
+qsort :: (Enum a) => [a] -> [a]
 qsort []     = []
 qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
                qsort (filter (>= x) xs) 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.javascript}
+function factorial (n) {
+    if (n == 0) {
+        return 1;
+    }
+    return n * factorial(n - 1); 
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -44,4 +44,10 @@ h1 a {
 h1 a:hover {
     -webkit-transform: rotate(3deg); 
     -moz-transform: rotate(3deg);
-};
+}
+
+pre.sourceCode {
+    margin:5px;
+    padding:3px;
+    background-color:#f4f4f4;
+}
