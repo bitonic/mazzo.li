@@ -20,10 +20,10 @@ time, mark, audio, video {
 }
 
 body {
-    width: 600px;
+    width: 700px;
     margin: 0px auto 0px auto;
     font-family: Consolas, Inconsolata, monospace;
-    color:black;
+    color:#1e1e1e;
     text-align:justify;
     padding:10px 0;
     background-color: white;
@@ -37,8 +37,8 @@ h1 {
 
 h1 a {
     text-decoration:none;
-    color:#c3c3c3;
     text-shadow: #555 0 -1px 1px;
+    color:#1e1e1e;
 }
 
 h1 a:hover {
@@ -50,4 +50,29 @@ pre.sourceCode {
     margin:5px;
     padding:3px;
     background-color:#f4f4f4;
+}
+
+div {
+    padding:10px;
+}
+
+/* Stuff for the index */
+
+#posts ul {
+    list-style:none;
+    font-size:200%;
+    text-align:right;
+}
+
+#posts em {
+    float:left;
+    padding:3px;
+    color:#5b5b5b;
+}
+
+#posts a {
+    padding:3px;
+    text-decoration:none;
+    text-shadow: #555 0 -1px 1px;
+    color:#1e1e1e;
 }

@@ -1,15 +1,28 @@
+import Control.Monad (liftM)
+import Control.Arrow ((>>>))
+import Data.List (sort)
+import Data.Either (Either(..))
+
 import Text.Hakyll (hakyll)
-import Text.Hakyll.File (directory)
+import Text.Hakyll.File (directory, getRecursiveContents)
 import Text.Hakyll.Render (css, static, renderChain)
-import Text.Hakyll.CreateContext (createPage)
+import Text.Hakyll.CreateContext (createPage, createListing)
+import Text.Hakyll.ContextManipulations (renderDate)
 
 main = hakyll "http://mazzo.li" $ do
   directory css "css"
   directory static "images"
   directory static "js"
-  render "about.rst"
-  render "index.markdown"
-  render "code.lhs"
-  where
-    render = renderChain ["templates/default.html"]
-           . createPage
+  
+  articlesPath <- liftM (reverse . sort) $ getRecursiveContents "articles"
+  let articlesPages = map ((>>> renderDate "prettydate" "%b %e, %Y" "Date unknown") .
+                           createPage) articlesPath
+
+  let index = createListing "index.html"
+              ["templates/articlelink.html"]
+              articlesPages
+              [("title", Left "Home")]
+  
+  renderChain ["templates/index.html", "templates/default.html"] index
+  renderChain ["templates/default.html"] . createPage $ "about.rst"
+  renderChain ["templates/default.html"] . createPage $ "code.lhs"
