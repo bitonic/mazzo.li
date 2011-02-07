@@ -37,7 +37,7 @@ h1 {
 
 h1 a {
     text-decoration:none;
-    text-shadow: #555 0 -1px 1px;
+    /* text-shadow: #555 0 -1px 1px; */
     color:#1e1e1e;
 }
 
@@ -58,21 +58,43 @@ div {
 
 /* Stuff for the index */
 
-#posts ul {
+#articles ul {
     list-style:none;
     font-size:200%;
     text-align:right;
 }
 
-#posts em {
+#articles li {
+    clear:both;
+}
+
+#articles em {
     float:left;
     padding:3px;
     color:#5b5b5b;
 }
 
-#posts a {
+#articles a {
     padding:3px;
     text-decoration:none;
-    text-shadow: #555 0 -1px 1px;
     color:#1e1e1e;
+    font-weight:bold;
+}
+
+/* Stuff for the article display */
+
+#article h2 {
+    font-size:200%;
+    text-align:right;
+    padding:3px 0;
+}
+
+#article h2 em {
+    float:left;
+    color:#5b5b5b;
+    font-weight:normal;
+}
+
+#article p {
+    padding:3px 0;
 }
