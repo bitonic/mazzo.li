@@ -10,7 +10,7 @@ import Text.Hakyll.CreateContext (createPage, createListing)
 import Text.Hakyll.ContextManipulations (renderDate)
 
 main = hakyll "http://mazzo.li" $ do
-  directory css "css"
+  directory static "css"
   directory static "images"
   directory static "js"
   

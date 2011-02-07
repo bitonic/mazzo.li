@@ -38,19 +38,12 @@ h1 {
 
 h1 a {
     text-decoration:none;
-    /* text-shadow: #555 0 -1px 1px; */
     color:#1e1e1e;
 }
 
 h1 a:hover {
     -webkit-transform: rotate(3deg); 
     -moz-transform: rotate(3deg);
-}
-
-pre.sourceCode {
-    margin:5px;
-    padding:3px;
-    background-color:#f4f4f4;
 }
 
 div {
@@ -111,4 +104,43 @@ div {
 #article p {
     padding:3px 0;
     text-indent:1.5em;
+}
+
+#article h3 {
+    font-weight:bold;
+    font-size:130%;
+    padding:10px 0 5px 0;
+}
+
+#article a {
+    color: black;
+}
+
+/* Pandoc */
+pre.sourceCode {
+    margin:5px 0;
+    padding:5px;
+    background-color:#1e1e1e;
+    font-size:100%;
+    color:white;
+}
+
+table.sourceCode {
+    width:100%;
+}
+
+code.sourceCode span.kw {
+    color: #00ae32;
+}
+
+code.sourceCode span.dt {
+    color: #c72c00;
+}
+
+code.sourceCode span.ch {
+    color: #528fcd;
+}
+
+code.sourceCode span.dv {
+    color: #54d293;
 }
