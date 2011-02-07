@@ -22,7 +22,7 @@ time, mark, audio, video {
 body {
     width: 700px;
     margin: 0px auto 0px auto;
-    font-family: Consolas, Inconsolata, monospace;
+    font-family: Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace;
     color:#1e1e1e;
     text-align:justify;
     padding:10px 0;
@@ -66,12 +66,13 @@ div {
 
 #articles li {
     clear:both;
+    padding:3px 0;
 }
 
 #articles em {
     float:left;
-    padding:3px;
     color:#5b5b5b;
+    font-weight:normal;
 }
 
 #articles a {
@@ -79,6 +80,10 @@ div {
     text-decoration:none;
     color:#1e1e1e;
     font-weight:bold;
+}
+
+#about a {
+    color:#1e1e1e;
 }
 
 /* Stuff for the article display */
@@ -97,4 +102,5 @@ div {
 
 #article p {
     padding:3px 0;
+    text-indent:1.5em;
 }
