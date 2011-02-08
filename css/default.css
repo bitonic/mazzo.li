@@ -46,12 +46,21 @@ h1 a:hover {
     -moz-transform: rotate(3deg);
 }
 
-div {
-    padding:10px;
+#footer a {
+    color:#1e1e1e;
+}
+
+#footer {
+    margin-top:10px;
+    text-align:right;
+    padding:10px 10px 0 10px;
 }
 
 /* Stuff for the index */
 
+#articles {
+    padding:10px;
+}
 #articles ul {
     list-style:none;
     font-size:200%;
@@ -79,11 +88,19 @@ div {
     text-shadow: -1px -1px 0px black;
 }
 
+#about {
+    padding:10px;
+}
+
 #about a {
     color:#1e1e1e;
 }
 
 /* Stuff for the article display */
+
+#article {
+    padding:10px;
+}
 
 #article h2 {
     font-size:200%;
@@ -114,6 +131,10 @@ div {
 
 #article a {
     color: black;
+}
+
+#article ul {
+    margin:3px 10px;
 }
 
 /* Pandoc */
