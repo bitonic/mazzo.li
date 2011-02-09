@@ -12,7 +12,8 @@ document.addEvent('domready', function() {
         'background-color': 'black',
         margin: '10px 0',
         'font-size': '20px',
-        'text-shadow': '1px 1px 0 #476871, 2px 2px 0 #476871'
+        'text-shadow': '1px 1px 0 #476871, 2px 2px 0 #476871',
+        'font-family': 'Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace'
     });
 
     $('player').grab(player);

@@ -10,19 +10,20 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section, summary,
 time, mark, audio, video {
-  margin:0;
-  padding:0;
-  border:0;
-  outline:0;
-  font-size:100%;
-  vertical-align:baseline;
-  background:transparent;
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+    font-variant:normal;
 }
 
 body {
     width: 700px;
     margin: 0px auto 0px auto;
-    font-family: Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace;
+    font-family: LinuxBiolinum, Helvetica, Arial, sans-serif;
     color:#1e1e1e;
     text-align:justify;
     padding:10px 0;
@@ -56,6 +57,11 @@ h1 a:hover {
     padding:10px 10px 0 10px;
 }
 
+code {
+    font-family: Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace;
+    padding:0 3px;
+    border-radius: 2px;
+}
 /* Stuff for the index */
 
 #articles {
@@ -142,7 +148,6 @@ pre.sourceCode {
     margin:5px 0;
     padding:5px;
     background-color:#1e1e1e;
-    font-size:100%;
     color:white;
 }
 

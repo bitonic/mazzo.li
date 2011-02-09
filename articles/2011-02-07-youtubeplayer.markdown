@@ -37,6 +37,8 @@ you can do with it:
 <noscript>You need Javascript to play YouTube videos!</noscript>
 </div>
 
+### Creating the YouTubePlayer object
+
 To use the class, all you have to to is to create a new element, and
 then inject it somewhere:
 
@@ -46,7 +48,8 @@ var player = new YouTubePlayer({
                  height: 356,
                  videoId: 'XDZ31YQvxWY',
                  id: 'videoPlayer',
-                 embedded: false
+                 embedded: false,
+                 suggestedQuality: 'large'
              });
 
 $('playerDiv').grab(player);
@@ -60,8 +63,19 @@ The initializer accepts all the [Swiff] options, plus the following:
 * `embedded`: A boolean that determines wheter the video is in the old
   embedded style or as a bare video. Both versions are controllable
   via the js api.
+* `suggestedQuality`: A string with the quality you would like to have
+  with your video. The "suggested" is because that quality might not
+  be available. In that case, the quality will be set to the next
+  lowest level that is available.  The quality level available are
+  `small`, `medium`, `large`, `hd720`, `hd1080`, `highres` or
+  `default`. `default` is not an actual quality level, but simply
+  instructs YouTube to select the most appropriate playback quality,
+  which will vary for different users, videos, systems and other
+  playback conditions.
 
 [Swiff]: http://mootools.net/docs/core/Utilities/Swiff
+
+### Controlling the player
 
 <script type="text/javascript" src="$root/js/libs/mootools-more.js"></script>
 <script type="text/javascript" src="https://github.com/rostayob/YouTubePlayer/raw/master/YouTubePlayer.js"></script>
