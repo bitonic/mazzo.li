@@ -220,7 +220,7 @@ document.addEvent('domready', function() {
                     styles: {
                         cursor: 'pointer'
                     },
-                    class: 'clickableQuality'
+                    'class': 'clickableQuality'
                 }).addEvent('click', function() {
                     player.setPlaybackQuality(q);
                 }));
