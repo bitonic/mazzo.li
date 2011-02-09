@@ -43,7 +43,7 @@ h1 a {
 }
 
 h1 a:hover {
-    -webkit-transform: rotate(3deg); 
+
     -moz-transform: rotate(3deg);
 }
 
@@ -125,7 +125,7 @@ code {
 }
 
 #article p {
-    padding:3px 0;
+    padding:0.1em 0;
     text-indent:1.5em;
 }
 

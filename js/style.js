@@ -1,28 +1,54 @@
 // Various functions relative to the styling of the page.
 
 var shadowHeight = 6;
+var cookieName = 'events';
+var events = [colorsTrans, colorsRun, colorsBlink, shadowColor];
 
 window.addEvent('domready', function() {
     var title = $$('a')[0];
 
-    var rand = Math.floor(Math.random() * 4);
-    switch (rand) {
-    case 0:
-        colorsTrans(title);
-        break;
-    case 1:
-        colorsRun(title);
-        break;
-    case 2:
-        colorsBlink(title);
-        break;
-    case 3:
-        shadowColor(title);
-        break;
-    default:
-        break;
-    }
+    getEvent()(title);
 });
+
+function getEvent() {
+    var eventsCookie = Cookie.read(cookieName);
+    
+    if (eventsCookie) {
+
+        var list = JSON.parse(reviver);
+
+        if (list.length > 0) {
+            var ev = list.pop();
+            Cookie.write(cookieName, JSON.stringify(list));
+            return events[ev];
+        } else {
+            Cookie.dispose(cookieName);
+            return getEvent();
+        }
+
+    } else {
+
+        var i;
+        var list = [];
+        for (i = 0; i < events.length; i++) {
+            list[i] = i;
+        }
+
+        var j, t;
+        for (i = 1; i < list.length; i++) {
+            j = Math.floor(Math.random() * (1 + i));
+            if (j != i) {
+                t = list[i];
+                list[i] = list[j];
+                list[j] = t;
+            }
+        }
+
+        var ev = list.pop();
+        Cookie.write(cookieName, JSON.stringify(list));
+        return events[ev];
+    }
+}
 
 function colorsTrans(el) {
     el.setStyle('color', nextColor());
