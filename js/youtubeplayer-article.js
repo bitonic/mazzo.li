@@ -4,13 +4,13 @@ document.addEvent('domready', function() {
         height: 380,
         videoId: 'XDZ31YQvxWY',
         id: 'videoPlayer',
-        embedded: false
+        embedded: false,
+        suggestedQuality: 'large'
     });
 
     $('player').setStyles({
         'background-color': 'black',
         margin: '10px 0',
-        height: '417px',
         'font-size': '20px',
         'text-shadow': '1px 1px 0 #476871, 2px 2px 0 #476871'
     });
@@ -24,13 +24,14 @@ document.addEvent('domready', function() {
         }
     });
 
+    $('player').grab(bar);
 
     // -------------------------------------------------------------------------
     // Separator...
     var barSeparator = function() {
         return new Element('div', {
             styles: {
-                float:'left',
+                float: 'left',
                 margin: '0 3px'
             },
             html: '&middot;'
@@ -41,8 +42,9 @@ document.addEvent('domready', function() {
     // Play/pause
     var barPlayPause = new Element('div', {
         styles: {
-            float:'left',
-            cursor:'pointer'
+            float: 'left',
+            cursor:'pointer',
+            height: '31px'
         },
         html: 'Play'
     });
@@ -74,7 +76,7 @@ document.addEvent('domready', function() {
     // Volume
     var barVolume = new Element('div', {
         styles: {
-            float: 'left',
+            float: 'left'
         },
     });
 
@@ -83,6 +85,22 @@ document.addEvent('domready', function() {
     barVolumeMute.mute = false;
     barVolumeMute.setStyle('cursor', 'pointer');
 
+    var barVolumeContainer = new Element('div', {
+        styles: {
+            position: 'absolute',
+            'background-color': 'black',
+            width: '26px'
+        },
+    });
+
+    var barVolumeSlider = new Element('div', {
+        styles: {
+            float: 'left',
+            height: '70px',
+            margin: '0 0 5px 0'
+        }
+    });
+
     var barVolumeKnob = new Element('div', {
         styles: {
             width: '16px',
@@ -90,27 +108,16 @@ document.addEvent('domready', function() {
             margin: '0 0 0 4px',
             'background-color': 'white',
             border: '1px solid #476871',
-            'display': 'none',
             'cursor': 'pointer'
         }
     });
 
-    barVolumeSlider = new Element('div', {
-        styles: {
-            float: 'left',
-            position: 'absolute',
-            'background-color': 'black'
-        },
-    });
-
     barVolumeMute.addEvent('mouseenter', function() {
-        barVolumeSlider.setStyle('height', '100px');
-        barVolumeKnob.setStyle('display', 'block');
+        barVolumeSlider.setStyle('display', 'block');
     });
 
-    barVolumeSlider.addEvent('mouseleave', function() {
-        barVolumeSlider.setStyle('height', '28px');
-        barVolumeKnob.setStyle('display', 'none');
+    barVolumeContainer.addEvent('mouseleave', function() {
+        barVolumeSlider.setStyle('display', 'none');
     });
 
     barVolumeMute.addEvent('click', function() {
@@ -124,16 +131,62 @@ document.addEvent('domready', function() {
         barVolumeMute.mute = !barVolumeMute.mute;
     });
 
-    barVolumeSlider.grab(barVolumeMute);
+    barVolumeContainer.grab(barVolumeMute);
+    barVolumeContainer.grab(barVolumeSlider);
     barVolumeSlider.grab(barVolumeKnob);
 
-    barVolume.grab(barVolumeSlider);
-
-    new Slider(barVolumeSlider, barVolumeKnob, {
-        mode: 'vertical'
-    });
+    barVolume.grab(barVolumeContainer);
 
     bar.grab(barVolume);
 
-    $('player').grab(bar);
+    var volumeSlider = new Slider(barVolumeSlider, barVolumeKnob, {
+        mode: 'vertical',
+        onChange: function(value){
+            player.setVolume(100 - value);
+        }
+    });
+    barVolumeSlider.setStyle('display', 'none');
+
+    player.addEvent('playerReady', function() {
+        volumeSlider.set(100 - player.getVolume());
+    });
+
+    bar.grab(barSeparator().setStyle('margin-left', '27px'));
+
+    // -------------------------------------------------------------------------
+    // The quality
+    barQuality = new Element('div', {
+        styles: {
+            float: 'left'
+        },
+        text: '480p'
+    });
+
+    var qualityFormat = function(quality) {
+        if (quality == 'medium')
+            return '360p'
+
+        if (quality == 'large')
+            return '480p'
+
+        if (quality == 'small')
+            return '240p'
+
+        return quality
+    }
+    
+    player.addEvent('playbackQualityChange', function(quality) {
+        barQuality.set('text', qualityFormat(quality));
+    });
+
+    bar.grab(barQuality)
+
+    // To clear stuff...
+    $('player').grab(new Element('hr', {
+        styles: {
+            clear: 'both',
+            height: 0,
+            visibility: 'hidden'
+        }
+    }));
 });

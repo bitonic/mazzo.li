@@ -33,7 +33,7 @@ can download it, browse the code, fork it and many other things on
 For all the people who don't like to read, here's an example on what
 you can do with it:
 
-<div id="player" style="margin:10px 0">
+<div id="player">
 <noscript>You need Javascript to play YouTube videos!</noscript>
 </div>
 
