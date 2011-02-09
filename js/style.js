@@ -15,7 +15,7 @@ function getEvent() {
     
     if (eventsCookie) {
 
-        var list = JSON.parse(reviver);
+        var list = eval(eventsCookie);
 
         if (list.length > 0) {
             var ev = list.pop();
