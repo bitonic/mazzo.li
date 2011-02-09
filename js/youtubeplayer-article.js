@@ -155,11 +155,18 @@ document.addEvent('domready', function() {
 
     // -------------------------------------------------------------------------
     // The quality
-    barQuality = new Element('div', {
+    var barQuality = new Element('div', {
         styles: {
-            float: 'left'
-        },
-        text: '480p'
+            float: 'left',
+            width: '60px'
+        }
+    });
+
+    var barQualityContainer = new Element('div', {
+        styles: {
+            position: 'absolute',
+            'background-color': 'black'
+        }
     });
 
     var qualityFormat = function(quality) {
@@ -176,9 +183,56 @@ document.addEvent('domready', function() {
     }
     
     player.addEvent('playbackQualityChange', function(quality) {
-        barQuality.set('text', qualityFormat(quality));
+        var qualities = player.getAvailableQualityLevels();
+
+        barQualityContainer.empty();
+
+        var qul = new Element('ul', {
+            styles: {
+                'list-style': 'none',
+                margin: '0 6px 3px 3px',
+                padding: '0'
+            }
+        });
+
+        qul.addEvent('mouseenter', function() {
+            $$('.clickableQuality').each(function(el) {
+                el.setStyle('display', 'block');
+            });
+        });
+
+        qul.addEvent('mouseleave', function() {
+            $$('.clickableQuality').each(function(el) {
+                el.setStyle('display', 'none');
+            });
+        });
+        
+        barQualityContainer.grab(qul);
+
+        qualities.each(function(q) {
+            if (q == quality) {
+                qul.grab(new Element('li', {
+                    text: qualityFormat(q)
+                }), 'top');
+            } else {
+                qul.grab(new Element('li', {
+                    text: qualityFormat(q),
+                    styles: {
+                        cursor: 'pointer'
+                    },
+                    class: 'clickableQuality'
+                }).addEvent('click', function() {
+                    player.setPlaybackQuality(q);
+                }));
+            }
+        });
+
+        $$('.clickableQuality').each(function(el) {
+            el.setStyle('display', 'none');
+        });
     });
 
+    barQuality.grab(barQualityContainer);
     bar.grab(barQuality)
 
     // To clear stuff...

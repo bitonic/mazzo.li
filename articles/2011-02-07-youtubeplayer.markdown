@@ -63,6 +63,6 @@ The initializer accepts all the [Swiff] options, plus the following:
 
 [Swiff]: http://mootools.net/docs/core/Utilities/Swiff
 
-<script type="text/javascript" src="$root/js/mootools-more.js"></script>
+<script type="text/javascript" src="$root/js/libs/mootools-more.js"></script>
 <script type="text/javascript" src="https://github.com/rostayob/YouTubePlayer/raw/master/YouTubePlayer.js"></script>
 <script type="text/javascript" src="$root/js/youtubeplayer-article.js"></script>
