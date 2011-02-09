@@ -14,24 +14,24 @@ time, mark, audio, video {
     padding:0;
     border:0;
     outline:0;
-    font-size:100%;
+    font-size:1em;
     vertical-align:baseline;
     background:transparent;
     font-variant:normal;
 }
 
 body {
-    width: 700px;
-    margin: 0px auto 0px auto;
+    width: 55em;
+    margin: 0 auto 0 auto;
     font-family: LinuxBiolinum, Helvetica, Arial, sans-serif;
     color:#1e1e1e;
     text-align:justify;
-    padding:10px 0;
+    padding:0.8em 0;
     background-color: white;
 }
 
 h1 {
-    font-size:400%;
+    font-size:4em;
     padding:0;
     text-align:right;
     text-shadow: 1px 1px 0px black, 2px 2px 0px #476871, 3px 3px 0px #476871, 4px 4px 0px #476871, 5px 5px 0px #476871, 6px 6px 0px #476871, 7px 7px 0px #476871;
@@ -52,9 +52,9 @@ h1 a:hover {
 }
 
 #footer {
-    margin-top:10px;
+    margin-top:0.8em;
     text-align:right;
-    padding:10px 10px 0 10px;
+    padding:0.7em 0 0 0;
 }
 
 code {
@@ -64,37 +64,36 @@ code {
 /* Stuff for the index */
 
 #articles {
-    padding:10px;
+    padding:0.7em 0;
 }
 #articles ul {
     list-style:none;
-    font-size:200%;
+    font-size:2em;
     text-align:left;
 }
 
 #articles li {
     clear:both;
-    padding:3px 0;
+    padding:0.15em 0;
 }
 
 #articles em {
     float:right;
     color:#5b5b5b;
     font-weight:normal;
-    padding:0 0 0 10px;
+    padding:0 0 0 1em;
     text-shadow: none;
 }
 
 #articles a {
-    padding:3px;
     text-decoration:none;
     color:#476871;
     font-weight:bold;
-    text-shadow: -1px -1px 0px black;
+    text-shadow: -1px -1px 0 black;
 }
 
 #about {
-    padding:10px;
+    padding:0.7em 0;
 }
 
 #about a {
@@ -104,22 +103,22 @@ code {
 /* Stuff for the article display */
 
 #article {
-    padding:10px;
+    padding:0.7em 0;
 }
 
 #article h2 {
-    font-size:200%;
-    padding:3px 0;
+    font-size:2em;
+    padding:0.15em 0;
     text-align:left;
     color:#476871;
-    text-shadow: -1px -1px 0px black;
+    text-shadow: -1px -1px 0 black;
 }
 
 #article h2 em {
     float:right;
     color:#5b5b5b;
     font-weight:normal;
-    padding:0 0 0 10px;
+    padding:0 0 0 1em;
     text-shadow:none;
 }
 
@@ -130,8 +129,8 @@ code {
 
 #article h3 {
     font-weight:bold;
-    font-size:130%;
-    padding:10px 0 5px 0;
+    font-size:1.3em;
+    padding:0.8em 0 0.3em 0;
 }
 
 #article a {
@@ -139,13 +138,17 @@ code {
 }
 
 #article ul {
-    margin:3px 10px;
+    margin:0.2em 1.5em;
+}
+
+#article li {
+    margin:0 0 0.2em 0;
 }
 
 /* Pandoc */
 pre.sourceCode {
-    margin:5px 0;
-    padding:5px 8px;
+    margin:0.2em 0;
+    padding:0.4em 0.7em;
     background-color:#1e1e1e;
     color:white;
 }

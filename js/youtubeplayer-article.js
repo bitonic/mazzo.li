@@ -10,10 +10,11 @@ document.addEvent('domready', function() {
 
     $('player').setStyles({
         'background-color': 'black',
-        margin: '10px 0',
+        margin: '10px auto',
         'font-size': '20px',
         'text-shadow': '1px 1px 0 #476871, 2px 2px 0 #476871',
-        'font-family': 'Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace'
+        'font-family': 'Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace',
+        'width': '680px',
     });
 
     $('player').grab(player);
