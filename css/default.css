@@ -59,9 +59,8 @@ h1 a:hover {
 
 code {
     font-family: Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace;
-    padding:0 3px;
-    border-radius: 2px;
 }
+
 /* Stuff for the index */
 
 #articles {
@@ -146,7 +145,7 @@ code {
 /* Pandoc */
 pre.sourceCode {
     margin:5px 0;
-    padding:5px;
+    padding:5px 8px;
     background-color:#1e1e1e;
     color:white;
 }

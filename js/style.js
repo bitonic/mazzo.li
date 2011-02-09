@@ -57,7 +57,7 @@ function colorsTrans(el) {
         duration: '1000'
     });
 
-    var setColor = function() {
+    function setColor() {
         colTween.start('color', nextColor());
     }
 
@@ -74,7 +74,7 @@ function colorsRun(el) {
         colors[i] = nextColor(200);
     }
 
-    var changeColors = function() {
+    function changeColors() {
         for (var i = 0; i < spans.length; i++) {
             spans[i].setStyle('color', colors[i]);
         }
@@ -117,7 +117,7 @@ function shadowColor(el) {
         colors[i] = nextColor();
     }
 
-    var colorShadow = function() {
+    function colorShadow() {
         colors.shift();
         colors.push(nextColor());
 
@@ -200,7 +200,7 @@ function nextColor(treshold_up, treshold_down) {
 //         return shadow;
 //     };
     
-//     var changeHeights = function() {
+//     function changeHeights() {
 //         for (var i = 0; i < spans.length; i++) {
 //             spans[i].setStyle('text-shadow',
 //                               buildShadow(Math.floor(Math.random() * (shadowHeight + 1))));
