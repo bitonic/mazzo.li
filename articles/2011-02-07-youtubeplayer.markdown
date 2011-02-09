@@ -6,7 +6,7 @@ I always hated the default YouTube embedded player. Here is a reminder
 on how it looks:
 
 <div style="text-align:center">
-<iframe title="YouTube video player" width="640" height="390" src="http://www.youtube.com/embed/XDZ31YQvxWY" frameborder="0" allowfullscreen></iframe>
+<object width="640" height="385"><param name="movie" value="http://www.youtube.com/v/XDZ31YQvxWY?fs=1&amp;hl=en_US&amp;rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/XDZ31YQvxWY?fs=1&amp;hl=en_US&amp;rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="640" height="385"></embed></object>
 </div>
 
 It doesn't even look that bad, but embedded videos nowadays all look
