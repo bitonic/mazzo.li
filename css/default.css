@@ -172,3 +172,20 @@ code.sourceCode span.ch {
 code.sourceCode span.dv {
     color: #54d293;
 }
+
+/* Disqus */
+#dsq-global-toolbar {
+    display:none;
+}
+
+#dsq-content h3 {
+    display: inline;
+}
+
+#dsq-reply #dsq-avatar {
+    padding:1em 0 0 0;
+}
+
+#dsq-reply .dsq-textarea {
+    margin-top:1em;
+}
