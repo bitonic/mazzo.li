@@ -1,5 +1,6 @@
-// BEWARE! The code below is really ugly, I hacked a demo quickly in a
-// few hours and I put the old YouTubePlayer demo here. Forgive me.
+// BEWARE! The code below is really, REALLY, ugly, I hacked a demo
+// quickly in a few hours and I put the old YouTubePlayer demo
+// here. Forgive me.
 
 document.addEvent('domready', function() {
     demo1();
@@ -24,7 +25,7 @@ function demo1() {
         'font-size': '20px',
         'text-shadow': '1px 1px 0 #476871, 2px 2px 0 #476871',
         'font-family': 'Consolas, Inconsolata, "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Monaco, monospace',
-        'width': '680px',
+        'width': '680px'
     });
 
     $('demo1').grab(player);
@@ -56,7 +57,9 @@ function demo1() {
         styles: {
             float: 'left',
             cursor:'pointer',
-            height: '31px'
+            height: '31px',
+            width: '55px',
+            'text-align': 'center'
         },
         html: 'Play'
     });
@@ -246,6 +249,60 @@ function demo1() {
 
     barQuality.grab(barQualityContainer);
     bar.grab(barQuality)
+    bar.grab(barSeparator().setStyle('margin-left', '55px'));
+
+    // -------------------------------------------------------------------------
+    // The slider
+    var barSlider = new Element('div', {
+        styles: {
+            'width': '478px',
+            'height': '21px',
+            'float': 'right',
+            'background-image': 'url(../images/youtubeplayer-article-slider.png)',
+            'margin': '0 3px 0 0'
+        }
+    });
+
+    var barSliderKnob = new Element('span', {
+        text: '|',
+        styles: {
+            cursor: 'pointer',
+            width: '4px'
+        }
+    });
+    
+    barSlider.seekPlayer = false;
+    
+    barSlider.grab(barSliderKnob);
+
+    bar.grab(barSlider);
+
+    var actualSlider = new Slider(barSlider, barSliderKnob, {
+        steps:500,
+        onChange: function(value) {
+            if (barSlider.seekPlayer) {
+                player.seekTo(value * player.getDuration() / 500, true)
+            }
+        }
+    });
+
+    actualSlider.drag.addEvent('start', function() {
+        barSlider.seekPlayer = true;
+        player.pauseVideo();
+    });
+
+    actualSlider.drag.addEvent('complete', function() {
+        barSlider.seekPlayer = false;
+        player.playVideo();
+    });
+
+
+    var delay = 900;
+    window.setInterval(function() {
+        if (!barSlider.seekPlayer) {
+            actualSlider.set(500 * player.getCurrentTime() / player.getDuration())
+        }
+    }, delay);
 
     // To clear stuff...
     $('demo1').grab(new Element('hr', {
