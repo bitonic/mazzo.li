@@ -22,12 +22,12 @@ main = hakyll "http://mazzo.li/b/" $ do
                            (>>> renderValue "path" "identifier" stripQuotes) .
                            createPage) articlesPaths
 
+  mapM_ (renderChain ["templates/article.html", "templates/default.html"])
+    articlesPages
+       
   let index = createListing "index.html"
               ["templates/articlelink.html"]
               articlesPages
               [("title", Left "Home")]
               
   renderChain ["templates/index.html", "templates/default.html"] index
-  
-  mapM_ (renderChain ["templates/article.html", "templates/default.html"])
-    articlesPages

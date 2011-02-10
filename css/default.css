@@ -182,7 +182,7 @@ code.sourceCode span.dv {
     display: inline;
 }
 
-#dsq-reply #dsq-avatar {
+#dsq-reply .dsq-avatar {
     padding:1em 0 0 0;
 }
 
