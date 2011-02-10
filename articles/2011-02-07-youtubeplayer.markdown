@@ -14,9 +14,9 @@ passing the function names as strings.
 ### The YouTubePlayer MooTools class
 
 So I decided to make things a little bit less ugly, and I wrote a
-[MooTools] class that hides all the bad bits and makes you happy. You
-can download it, browse the code, fork it and many other things on
-[github].
+[MooTools] class that hides all the bad bits and makes you
+happy. **You can download it, browse the code, fork it and many other
+things on [github]**.
 
 [MooTools]: http://mootools.net/
 [github]: https://github.com/rostayob/YouTubePlayer

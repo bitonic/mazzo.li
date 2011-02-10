@@ -13,19 +13,20 @@ window.addEvent('domready', function() {
 function getEffects() {
     var effectsCookie = Cookie.read(cookieName);
     
+    var list, ev;
     if (effectsCookie) {
 
-        var list = eval(effectsCookie);
+        list = eval(effectsCookie);
 
-        function fail() {
+        var fail = function() {
             Cookie.dispose(cookieName);
             return getEffects();
-        }
+        };
 
         if (list.length > 0) {
-            var ev = list.pop();
+            ev = list.pop();
             
-            if (typeOf(ev) == 'number' && ev >= 0 && ev < effects.length) {
+            if (typeOf(ev) === 'number' && ev >= 0 && ev < effects.length) {
                 Cookie.write(cookieName, JSON.stringify(list));
                 return effects[ev];
             } else {
@@ -36,24 +37,23 @@ function getEffects() {
         }
 
     } else {
+        var i, j, t;
+        list = [];
 
-        var i;
-        var list = [];
         for (i = 0; i < effects.length; i++) {
             list[i] = i;
         }
 
-        var j, t;
         for (i = 1; i < list.length; i++) {
             j = Math.floor(Math.random() * (1 + i));
-            if (j != i) {
+            if (j !== i) {
                 t = list[i];
                 list[i] = list[j];
                 list[j] = t;
             }
         }
 
-        var ev = list.pop();
+        ev = list.pop();
         Cookie.write(cookieName, JSON.stringify(list));
         return effects[ev];
     }
@@ -66,9 +66,9 @@ function colorsTrans(el) {
         duration: '1000'
     });
 
-    function setColor() {
+    var setColor = function() {
         colTween.start('color', nextColor());
-    }
+    };
 
     colTween.addEvent('complete', setColor);
 
@@ -78,13 +78,15 @@ function colorsTrans(el) {
 function colorsRun(el) {
     var colors = [];
     var spans = spannify(el);
+    var i;
 
-    for (var i = 0; i < spans.length; i++) {
+    for (i = 0; i < spans.length; i++) {
         colors[i] = nextColor(200);
     }
 
-    function changeColors() {
-        for (var i = 0; i < spans.length; i++) {
+    var changeColors = function() {
+        var i;
+        for (i = 0; i < spans.length; i++) {
             spans[i].setStyle('color', colors[i]);
         }
 
@@ -121,18 +123,20 @@ function colorsBlink(el) {
 
 function shadowColor(el) {
     var colors = [];
+    var i;
 
-    for (var i = 0; i < shadowHeight; i++) {
+    for (i = 0; i < shadowHeight; i++) {
         colors[i] = nextColor();
     }
 
-    function colorShadow() {
+    var colorShadow = function() {
+        var i;
+        var shadow = '1px 1px 0px black';
+
         colors.shift();
         colors.push(nextColor());
 
-        var shadow = '1px 1px 0px black';
-
-        for (var i = 0; i < shadowHeight; i++) {
+        for (i = 0; i < shadowHeight; i++) {
             shadow += ', ' + (i + 2) + 'px ' + (i + 2) + 'px 0px ' + colors[i]; 
         }
 
@@ -146,8 +150,9 @@ function shadowColor(el) {
 
 function spannify(el) {
     var spans = [];
-    
-    for (var i = 0; i < el.get('text').length; i++) {
+    var i;
+
+    for (i = 0; i < el.get('text').length; i++) {
         spans[i] = new Element('span', {
             text: el.get('text').charAt(i)
         });
@@ -155,7 +160,7 @@ function spannify(el) {
 
     el.empty();
 
-    for (var i = 0; i < spans.length; i++) {
+    for (i = 0; i < spans.length; i++) {
         el.grab(spans[i]);
     }
 
