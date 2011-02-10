@@ -1,36 +1,45 @@
 // Various functions relative to the styling of the page.
 
 var shadowHeight = 6;
-var cookieName = 'events';
-var events = [colorsTrans, colorsRun, colorsBlink, shadowColor];
+var cookieName = 'effects';
+var effects = [colorsTrans, colorsRun, colorsBlink, shadowColor];
 
 window.addEvent('domready', function() {
     var title = $$('a')[0];
 
-    getEvent()(title);
+    getEffects()(title);
 });
 
-function getEvent() {
-    var eventsCookie = Cookie.read(cookieName);
+function getEffects() {
+    var effectsCookie = Cookie.read(cookieName);
     
-    if (eventsCookie) {
+    if (effectsCookie) {
 
-        var list = eval(eventsCookie);
+        var list = eval(effectsCookie);
+
+        function fail() {
+            Cookie.dispose(cookieName);
+            return getEvent();
+        }
 
         if (list.length > 0) {
             var ev = list.pop();
-            Cookie.write(cookieName, JSON.stringify(list));
-            return events[ev];
+            
+            if (typeOf(ev) == 'number' && ev >= 0 && ev < effects.length) {
+                Cookie.write(cookieName, JSON.stringify(list));
+                return effects[ev];
+            } else {
+                fail();
+            }
         } else {
-            Cookie.dispose(cookieName);
-            return getEvent();
+            fail();
         }
 
     } else {
 
         var i;
         var list = [];
-        for (i = 0; i < events.length; i++) {
+        for (i = 0; i < effects.length; i++) {
             list[i] = i;
         }
 
@@ -46,7 +55,7 @@ function getEvent() {
 
         var ev = list.pop();
         Cookie.write(cookieName, JSON.stringify(list));
-        return events[ev];
+        return effects[ev];
     }
 }
 

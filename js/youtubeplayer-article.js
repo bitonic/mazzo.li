@@ -1,4 +1,13 @@
+// BEWARE! The code below is really ugly, I hacked a demo quickly in a
+// few hours and I put the old YouTubePlayer demo here. Forgive me.
+
 document.addEvent('domready', function() {
+    demo1();
+
+    demo2();
+});
+
+function demo1() {
     var player = new YouTubePlayer({
         width: 680,
         height: 380,
@@ -8,7 +17,8 @@ document.addEvent('domready', function() {
         suggestedQuality: 'large'
     });
 
-    $('player').setStyles({
+    $('demo1').empty();
+    $('demo1').setStyles({
         'background-color': 'black',
         margin: '10px auto',
         'font-size': '20px',
@@ -17,7 +27,7 @@ document.addEvent('domready', function() {
         'width': '680px',
     });
 
-    $('player').grab(player);
+    $('demo1').grab(player);
 
     var bar = new Element('div', {
         styles: {
@@ -26,7 +36,7 @@ document.addEvent('domready', function() {
         }
     });
 
-    $('player').grab(bar);
+    $('demo1').grab(bar);
 
     // -------------------------------------------------------------------------
     // Separator...
@@ -238,11 +248,199 @@ document.addEvent('domready', function() {
     bar.grab(barQuality)
 
     // To clear stuff...
-    $('player').grab(new Element('hr', {
+    $('demo1').grab(new Element('hr', {
         styles: {
             clear: 'both',
             height: 0,
             visibility: 'hidden'
         }
     }));
-});
+}
+
+function demo2() {
+    // yay
+    $('demo2').set('html', '<div id="right"><h4>Select your player</h4>Player type: <select id="playerType"><option value="embedded">Embedded</option><option value="chromeless">Chromeless</option></select><h4>Load or cue a video</h4>Video id or URL: <input type="text" id="idOrUrl" size="20"/><br/>Start at: <input type="text" id="startAt" size="4" value="0"/> seconds<br/>Suggested quality: <select id="newQuality"><option value="default">default</option><option value="small">small</option><option value="medium">medium</option><option value="large">large</option><option value="hd720">hd720</option><option value="hd1080">hd1080</option><option value="highres">highres</option></select><br/><input type="submit" value="Load video" id="loadVideo"/><input type="submit" value="Cue video" id="cueVideo"/><h4>Update current video</h4>Set quality: <select id="setQuality"><option value="default">default</option><option value="small">small</option><option value="medium">medium</option><option value="large">large</option><option value="hd720">hd720</option><option value="hd1080">hd1080</option><option value="highres">highres</option></select><br/><h4>Playback statistics</h4>Duration: <span id="duration"></span><br/>Current time: <span id="currentTime"></span><br/>Player state: <span id="playerState"></span><br/><br/>Total bytes: <span id="totalBytes"></span><br/>Start bytes: <span id="startBytes"></span><br/>Bytes loaded: <span id="bytesLoaded"></span><br/><br/>Quality level: <span id="currentQuality"></span><br/>Available levels: <span id="availableQualities"></span><br/></div><div id="demo2player">You need Flash player 8+ and JavaScript enabled to view this video.</div><h4>Playback controls</h4><a href="javascript:void(0)" id="play">Play</a> | <a href="javascript:void(0)" id="pause">Pause</a> | <a href="javascript:void(0)" id="stop">Stop</a> | Seek to: <input id="seekTo" type="text" size="3"/> seconds <input type="submit" value="Go" id="seekToGo"/><br/><h4>Volume controls</h4><a href="javascript:void(0)" id="mute">Mute</a> | <a href="javascript:void(0)" id="unmute">Unmute</a> | Set volume: <input type="text" size="4" id="volume"/> (0-100) [<span id="currentVolume"></span>] <input type="submit" value="Go" id="setVolume"/><h4>Player size</h4>Width: <input type="text" size="4" id="width"/> | Height: <input type="text" size="4" id="height"/> <input type="submit" value="Go" id="setSize"/><h4>Events</h4><ol id="events"></ol><h4>Video URL</h4><span id="videoUrl"></span><br/><strong>Embed Code</strong><br/><textarea id="embed" cols="50" rows="7"></textarea>');
+
+    $('demo2').setStyle('margin', '1em 0 0 0');
+    $$('#demo2 h4').each(function(e) {
+        e.setStyle('margin', '0.3em 0');
+    });
+
+    $('right').setStyles({
+        'float': 'right',
+        'margin': '0 0 0 1em'
+    });
+
+    // Creating the player object
+    var video = new YouTubePlayer({
+        width: 425,
+        height: 356,
+        videoId: 'u1zgFlCw8Aw',
+        id: 'video1',
+        embedded: true
+    });
+
+    window.playerType = 'embedded';
+    $('idOrUrl').set('value', 'u1zgFlCw8Aw');
+
+    $('demo2player').empty();
+    $('demo2player').grab(video);
+
+    $('startAt').set('value', '0');
+
+    var refresh = [];
+
+    // Playback controls
+    $('pause').addEvent('click', function() {
+        video.pauseVideo();
+    });
+
+    $('play').addEvent('click', function() {
+        video.playVideo();
+    });
+
+    $('stop').addEvent('click', function() {
+        video.stopVideo();
+    });
+
+    $('seekToGo').addEvent('click', function() {
+        video.seekTo(parseInt($('seekTo').get('value')));
+    });
+
+    // Volume controls
+    $('mute').addEvent('click', function() {
+        video.mute();
+    });
+
+    $('unmute').addEvent('click', function() {
+        video.unMute();
+    });
+
+    refresh.push(function() {
+        $('currentVolume').set('text', video.getVolume());
+    });
+
+    $('setVolume').addEvent('click', function() {
+        video.setVolume(parseInt($('volume').get('value')));
+    });
+
+    // Player size
+    $('width').set('value', video.get('width'));
+    $('height').set('value', video.get('height'));
+
+    $('setSize').addEvent('click', function() {
+        var width = parseInt($('width').get('value'));
+        var height = parseInt($('height').get('value'));
+        video.setSize(width, height);
+    });
+
+    // History
+    // Change the video url and embed code
+    var urlAndEmbed = function() {
+        $('videoUrl').set('text', video.getVideoUrl());
+        $('embed').set('html', video.getVideoEmbedCode());
+    };
+
+    // Counts the events
+    window.events = 0;
+    video.addEvent('stateChange', function(state) {
+        window.events++;
+        $('events').grab(new Element('li', {
+            text: 'The state changed changed to "' + state +
+                '" (' + YouTubePlayer.states[parseInt(state)] + ').',
+            value: window.events
+        }), 'top');
+    });
+
+    video.addEvent('error', function(error) {
+        window.events++;
+        $('events').grab(new Element('li', {
+            text: 'Error: "' + error + '".',
+            value: window.events
+        }), 'top');
+    });
+
+    video.addEvent('playbackQualityChange', function(quality) {
+        window.events++;
+        $('events').grab(new Element('li', {
+            text: 'The playback quality changed to "' + quality + '".',
+            value: window.events
+        }), 'top');
+    });
+
+    video.addEvent('playerReady', function() {
+        window.events++;
+        $('events').grab(new Element('li', {
+            text: 'Player ready.',
+            value: window.events
+        }), 'top');
+        
+        urlAndEmbed();
+    });
+
+
+    // Player type
+    $('playerType').addEvent('change', function() {
+        var options = video.options;
+        options.width = video.get('width');
+        options.height = video.get('height');
+        if ($('playerType').get('value') == 'embedded') {
+            options.embedded = true;
+        } else {
+            options.embedded = false;
+        }
+
+        video = new YouTubePlayer(options);
+
+        $('demo2player').empty();
+        $('demo2player').grab(video);
+    });
+
+    // Load/cue video
+    $('loadVideo').addEvent('click', function() {
+        video.loadVideo($('idOrUrl').get('value'),
+                        parseInt($('startAt').get('value')),
+                        $('newQuality').get('value'));
+
+        urlAndEmbed();
+    });
+
+    $('cueVideo').addEvent('click', function() {
+        video.cueVideo($('idOrUrl').get('value'),
+                       parseInt($('startAt').get('value')),
+                       $('newQuality').get('value'));
+
+        urlAndEmbed();
+    });
+
+    // Set the quality
+    $('setQuality').addEvent('change', function() {
+        video.setPlaybackQuality($('setQuality').get('value'));
+    });
+
+    // Playback statistics
+    refresh.push(function() {
+        $('duration').set('text', video.getDuration());
+        $('currentTime').set('text', video.getCurrentTime());
+        var state = video.getPlayerState();
+        $('playerState').set('text',
+                             state + ' (' + YouTubePlayer.states[state] + ')');
+        $('totalBytes').set('text', video.getVideoBytesTotal());
+        $('startBytes').set('text', video.getVideoStartBytes());
+        $('bytesLoaded').set('text', video.getVideoBytesLoaded());
+        $('currentQuality').set('text', video.getPlaybackQuality());
+        if (video.getAvailableQualityLevels()) {
+            $('availableQualities').set(
+                'text',
+                video.getAvailableQualityLevels().join(', '));
+        }
+    });
+
+    var delay = 300;
+    window.setInterval(function() {
+        for (var i = 0; i < refresh.length; i++) {
+            refresh[i]();
+
+        }
+    }, delay);
+}
