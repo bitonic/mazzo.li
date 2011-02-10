@@ -7,15 +7,16 @@ import Text.Hakyll (hakyll)
 import Text.Hakyll.File (directory, getRecursiveContents)
 import Text.Hakyll.Render (css, static, renderChain)
 import Text.Hakyll.CreateContext (createPage, createListing)
-import Text.Hakyll.ContextManipulations (renderDate)
+import Text.Hakyll.ContextManipulations (renderValue, renderDate)
 
-main = hakyll "http://mazzo.li" $ do
+main = hakyll "http://mazzo.li/b/" $ do
   directory static "css"
   directory static "images"
   directory static "js"
   
   articlesPaths <- liftM (reverse . sort) $ getRecursiveContents "articles"
   let articlesPages = map ((>>> renderDate "prettydate" "%b %e, %Y" "Date unknown") .
+                           (>>> renderValue "path" "identifier" (replace "'" "\\'") .
                            createPage) articlesPaths
 
   let index = createListing "index.html"
