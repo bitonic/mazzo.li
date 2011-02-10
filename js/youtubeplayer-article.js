@@ -71,15 +71,15 @@ function demo1() {
     player.addEvent('stateChange', function(state) {
         barPlayPause.empty();
         barPlayPause.removeEvents();
-        if (state == 1) {
-            barPlayPause.set('html', 'Pause');
-            barPlayPause.addEvent('click', function() {
-                player.pauseVideo();
-            });
-        } else {
+        if (state != 1) {
             barPlayPause.set('html', 'Play');
             barPlayPause.addEvent('click', function() {
                 player.playVideo();
+            });
+        } else {
+            barPlayPause.set('html', 'Pause');
+            barPlayPause.addEvent('click', function() {
+                player.pauseVideo();
             });
         }
     });

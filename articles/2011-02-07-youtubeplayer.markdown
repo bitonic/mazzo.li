@@ -31,7 +31,7 @@ You need Javascript to play YouTube videos!
 For a more comprehensive example, check the [demo] at the bottom of
 the page.
 
-[demo]: #demo
+[demo]: #a-more-serious-demo
 
 ### Creating the YouTubePlayer object
 
@@ -102,7 +102,7 @@ via the `object` object of the YouTubePlayer class.
 [official API operations]:
 http://code.google.com/apis/youtube/js_api_reference.html#Operations
 
-### <a name="demo">A more serious demo</a>
+### A more serious demo
 
 To test all the features I created a demo that mimicks the
 [official one], plus the possibility of changing the player type

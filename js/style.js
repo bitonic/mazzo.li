@@ -168,10 +168,10 @@ function spannify(el) {
 }
 
 function nextColor(treshold_up, treshold_down) {
-    if (treshold_up == undefined) {
+    if (treshold_up === undefined) {
         treshold_up = 256;
     }
-    if (treshold_down == undefined) {
+    if (treshold_down === undefined) {
         treshold_down = 0;
     }
 

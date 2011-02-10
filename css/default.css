@@ -149,28 +149,11 @@ code {
 pre.sourceCode {
     margin:0.2em 0;
     padding:0.4em 0.7em;
-    background-color:#1e1e1e;
-    color:white;
+    background-color:#f3f3bb;
 }
 
 table.sourceCode {
     width:100%;
-}
-
-code.sourceCode span.kw {
-    color: #00ae32;
-}
-
-code.sourceCode span.dt {
-    color: #c72c00;
-}
-
-code.sourceCode span.ch {
-    color: #528fcd;
-}
-
-code.sourceCode span.dv {
-    color: #54d293;
 }
 
 /* Disqus */
