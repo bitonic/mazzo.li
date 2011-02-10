@@ -29,10 +29,10 @@ function getEffects() {
                 Cookie.write(cookieName, JSON.stringify(list));
                 return effects[ev];
             } else {
-                fail();
+                return fail();
             }
         } else {
-            fail();
+            return fail();
         }
 
     } else {
