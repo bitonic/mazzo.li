@@ -127,13 +127,6 @@ function demo1() {
         }
     });
 
-    barVolumeMute.addEvent('mouseenter', function() {
-        barVolumeSlider.setStyle('display', 'block');
-    });
-
-    barVolumeContainer.addEvent('mouseleave', function() {
-        barVolumeSlider.setStyle('display', 'none');
-    });
 
     barVolumeMute.addEvent('click', function() {
         if (barVolumeMute.mute) {
@@ -160,7 +153,33 @@ function demo1() {
             player.setVolume(100 - value);
         }
     });
+    volumeSlider.dragging = false;
+    volumeSlider.mouseIn = false;
     barVolumeSlider.setStyle('display', 'none');
+
+
+    barVolumeMute.addEvent('mouseenter', function() {
+        barVolumeSlider.setStyle('display', 'block');
+        volumeSlider.mouseIn = true;
+    });
+
+    barVolumeContainer.addEvent('mouseleave', function() {
+        volumeSlider.mouseIn = false;
+        if (!volumeSlider.dragging) {
+            barVolumeSlider.setStyle('display', 'none');
+        }
+    });
+
+    volumeSlider.drag.addEvent('start', function() {
+        volumeSlider.dragging = true;
+    });
+
+    volumeSlider.drag.addEvent('complete', function() {
+        volumeSlider.dragging = false;
+        if (!volumeSlider.mouseIn) {
+            barVolumeSlider.setStyle('display', 'none');            
+        }
+    });
 
     player.addEvent('playerReady', function() {
         volumeSlider.set(100 - player.getVolume());
