@@ -73,9 +73,34 @@ The initializer accepts all the [Swiff] options, plus the following:
 
 ### Controlling the player
 
-<script type="text/javascript" src="$root/js/libs/mootools-more.js"></script>
-<script type="text/javascript" src="https://github.com/rostayob/YouTubePlayer/raw/master/YouTubePlayer.js"></script>
-<script type="text/javascript" src="$root/js/youtubeplayer-article.js"></script>
+To control the player you should refer to the
+[official API operations], with the following differences:
+
+* All the functions that return `void` get enqueued if the player is
+  not ready yet and will be executed when the player will become
+  ready. The functions that are supposed to return something return
+  `null` if the player is not ready.
+* `cueVideoById` and `cueVideoByUrl` got replaced by `cueVideo`, and
+  similarly `loadVideoById` and `loadVideoByUrl` got replaced by
+  `loadVideo`.  Just pass the url or id, and the class will guess if
+  it is an id or an url.
+* Events are handled in the usual MooTools way instead that with the
+  `addEventListener` function. The available events are `playerReady`,
+  `stateChange`, `playbackQualityChange` and `error`.  Please note
+  that if you add a `playerReady` event when the player is ready, the
+  function will be executed straight away. <br/>Example:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.javascript}
+player.addEvent('stateChange', function(state) {
+    console.log('State changed to ' + state);
+});
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you really want to control the flash object itself you can do it
+via the `object` object of the YouTubePlayer class.
+
+[official API operations]:
+http://code.google.com/apis/youtube/js_api_reference.html#Operations
 
 ### <a name="demo">A more serious demo</a>
 
@@ -88,3 +113,7 @@ without reloading the page.
 <div id="demo2">
 You need Javascript to play YouTube videos!
 </div>
+
+<script type="text/javascript" src="$root/js/libs/mootools-more.js"></script>
+<script type="text/javascript" src="https://github.com/rostayob/YouTubePlayer/raw/master/YouTubePlayer.js"></script>
+<script type="text/javascript" src="$root/js/youtubeplayer-article.js"></script>

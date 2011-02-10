@@ -19,7 +19,7 @@ function getEffects() {
 
         function fail() {
             Cookie.dispose(cookieName);
-            return getEvent();
+            return getEffects();
         }
 
         if (list.length > 0) {
