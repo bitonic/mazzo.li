@@ -16,7 +16,7 @@ main = hakyll "http://mazzo.li/b/" $ do
   
   articlesPaths <- liftM (reverse . sort) $ getRecursiveContents "articles"
   let articlesPages = map ((>>> renderDate "prettydate" "%b %e, %Y" "Date unknown") .
-                           (>>> renderValue "path" "identifier" (replace "'" "\\'") .
+                           (>>> renderValue "path" "identifier" (replace "'" "\\'")) .
                            createPage) articlesPaths
 
   let index = createListing "index.html"
