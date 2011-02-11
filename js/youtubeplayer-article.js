@@ -57,9 +57,9 @@ function demo1() {
         styles: {
             float: 'left',
             cursor:'pointer',
-            height: '31px',
             width: '55px',
-            'text-align': 'center'
+            'text-align': 'center',
+            'margin-bottom': '2px'
         },
         html: 'Play'
     });
@@ -107,8 +107,8 @@ function demo1() {
     var barVolumeContainer = new Element('div', {
         styles: {
             position: 'absolute',
-            'background-color': 'black',
-            width: '26px'
+            width: '26px',
+            'background-color': 'transparent'
         },
     });
 
@@ -164,6 +164,7 @@ function demo1() {
 
     barVolumeMute.addEvent('mouseenter', function() {
         barVolumeSlider.setStyle('display', 'block');
+        barVolumeContainer.setStyle('background-color', 'black');
         volumeSlider.mouseIn = true;
     });
 
@@ -171,6 +172,8 @@ function demo1() {
         volumeSlider.mouseIn = false;
         if (!volumeSlider.dragging) {
             barVolumeSlider.setStyle('display', 'none');
+            barVolumeContainer.setStyle('background-color', 'transparent');
+            
         }
     });
 
@@ -181,7 +184,8 @@ function demo1() {
     volumeSlider.drag.addEvent('complete', function() {
         volumeSlider.dragging = false;
         if (!volumeSlider.mouseIn) {
-            barVolumeSlider.setStyle('display', 'none');            
+            barVolumeSlider.setStyle('display', 'none');      
+            barVolumeContainer.setStyle('background-color', 'transparent');      
         }
     });
 
@@ -279,7 +283,6 @@ function demo1() {
     var barSlider = new Element('div', {
         styles: {
             'width': '478px',
-            'height': '21px',
             'float': 'right',
             'background-image': 'url(../images/youtubeplayer-article-slider.png)',
             'margin': '0 3px 0 0'
