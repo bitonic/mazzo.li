@@ -1,6 +1,6 @@
-/* Using the Linux Libertine sans-serif font (Biolinum), released
-under the GPL license (http://www.gnu.org/licenses/gpl.html) and the
-OFL license (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL) */
+/* Linux Libertine sans-serif font (Biolinum), released under the GPL
+license (http://www.gnu.org/licenses/gpl.html) and the OFL license
+(http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL) */
 
 @font-face {
     font-family: 'LinuxBiolinum';
@@ -28,6 +28,16 @@ OFL license (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL) */
          url('linbiolinum_re-0.6.4-webfont.woff') format('woff'),
          url('linbiolinum_re-0.6.4-webfont.ttf') format('truetype'),
          url('linbiolinum_re-0.6.4-webfont.svg#webfontMQYkAZ4R') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inconsolata';
+    src: url('inconsolata-webfont.eot?') format('eot'),
+         url('inconsolata-webfont.woff') format('woff'),
+         url('inconsolata-webfont.ttf') format('truetype'),
+         url('inconsolata-webfont.svg#webfont0RLrQAdt') format('svg');
     font-weight: normal;
     font-style: normal;
 }

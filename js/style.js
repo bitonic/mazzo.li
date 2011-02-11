@@ -110,7 +110,7 @@ function colorsBlink(el) {
 
     colTween.addEvent('complete', function() {
         setTimeout(function() {
-            blackTween.start('color', document.body.getStyle('background-color'));
+            blackTween.start('color', $(document.body).getStyle('background-color'));
         }, 200);
     });
 
@@ -118,7 +118,7 @@ function colorsBlink(el) {
         colTween.start('color', nextColor());
     });
 
-    blackTween.start('color', document.body.getStyle('background-color'));
+    blackTween.start('color', $(document.body).getStyle('background-color'));
 }
 
 function shadowColor(el) {

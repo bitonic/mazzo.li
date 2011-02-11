@@ -96,9 +96,13 @@ function demo1() {
     });
 
     var barVolumeMute = new Image();
-    barVolumeMute.src = '../images/youtubeplayer-article-volume.png';
-    barVolumeMute.mute = false;
-    barVolumeMute.setStyle('cursor', 'pointer');
+    var barVolumeMute = new Element('img', {
+        src: '../images/youtubeplayer-article-volume.png',
+        styles: {
+            cursor: 'pointer'
+        },
+        mute: false
+    });
 
     var barVolumeContainer = new Element('div', {
         styles: {
