@@ -92,7 +92,7 @@ function demo1() {
     var barVolume = new Element('div', {
         styles: {
             float: 'left'
-        },
+        }
     });
 
     var barVolumeMute = new Image();
@@ -109,7 +109,7 @@ function demo1() {
             position: 'absolute',
             width: '26px',
             'background-color': 'transparent'
-        },
+        }
     });
 
     var barVolumeSlider = new Element('div', {
