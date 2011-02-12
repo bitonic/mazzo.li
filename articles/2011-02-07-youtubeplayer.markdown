@@ -114,6 +114,6 @@ without reloading the page.
 You need Javascript to play YouTube videos!
 </div>
 
-<script type="text/javascript" src="$root/js/libs/mootools-more.js"></script>
-<script type="text/javascript" src="$root/js/libs/YouTubePlayer.js"></script>
+<script type="text/javascript" src="http://mazzo.li/jslibs/mootools-more-1.3-yc.js"></script>
+<script type="text/javascript" src="http://mazzo.li/jslibs/YouTubePlayer.js"></script>
 <script type="text/javascript" src="$root/js/youtubeplayer-article.js"></script>
