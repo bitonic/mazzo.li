@@ -1,0 +1,26 @@
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+*.agdai
+_cache/
+_site/
+dist/
+.stack-work
+assets/webpack
+bits/
+node_modules
+wip/
+yarn-error.log
+
+# The binary assets aren't versioned
+*.png
+*.jpg
+*.pdf
+*.mp4
+*.ppm

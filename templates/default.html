@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>mazzo.li &mdash; blag &mdash; $title$</title>
+    <meta name="author" content="Francesco Mazzoli <f@mazzo.li>">
+    <link rel="stylesheet" type="text/css" href="/assets/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/agda.css" />
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+    <meta property="twitter:site" content="trascendentale" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="mazzo.li — $title$" />
+    $if(description)$
+      <meta property="og:description" content="$description$"/>
+      <meta property="twitter:description" content="$description$" />
+    $endif$
+    $if(image)$
+      <meta property="og:image" content="$image$" />
+      <meta property="twitter:image" content="$image$" />
+    $endif$
+  </head>
+
+  <body>
+    <script src="/assets/webpack/scripts.js"></script>
+    $body$
+  </body>
+</html>
