@@ -1,0 +1,366 @@
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
+pre, abbr, address, cite, code, del, dfn, rem, img, ins, kbd, q, samp, small,
+strong, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label,
+legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas,
+details, figcaption, figure, footer, header, hgroup, menu, nav, section,
+summary, time, mark, audio, video {
+    background: transparent;
+    border: 0;
+    font-variant: normal;
+    font-size: 1em;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+/*
+  Turn off font boosting. It seems to only boost the prose, but not
+  the code or the KaTeX.
+*/
+html * {
+  max-height:1000000px;
+}
+
+/*
+  Instead, make fonts on high-DPI small screens bigger. This is kinda imperfect
+  but seems to work OK. I test it with chrome responsive simulator in the dev
+  tools.
+
+  I also keep the landscape mode unzoomed so that people can use it to check
+  out the code.
+*/
+@media (-webkit-min-device-pixel-ratio: 1.95) and (max-width: 1000px) and (orientation: portrait) { 
+    html {
+        font-size: 2rem;
+    }
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    color: #00000f;
+    font-family: "IBM Plex Serif", Garamond, Georgia, serif;
+    margin: 0;
+    padding: 0;
+    text-align: justify;
+    background-color: #FFFFF0;
+}
+
+code, samp {
+    font-family: "IBM Plex Mono", monospace;
+    font-style: normal;
+}
+
+pre {
+  font-size: 0.9rem;
+}
+
+sup {
+    font-size: 0.8rem;
+}
+
+#title {
+    color: #00000f;
+    text-align: left;
+    margin: 0 2rem;
+    font-weight: bold;
+    font-size: 5.5rem;
+    font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
+}
+
+#title a {
+    text-decoration: none;
+    color: #00000f;
+}
+
+#wrapper {
+    margin: 0 2rem 2rem 2rem;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    row-gap: 0;
+    column-gap: 0;
+    grid-auto-flow: row;
+    width: 60rem;
+    max-width: calc(100vw - 4rem);
+}
+
+#wrapper > * {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+h1, h2, h3 {
+    font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
+}
+
+h1 a, h2 a, h3 a {
+    text-decoration: none;
+}
+
+/* Stuff for the index */
+
+#articles {
+    max-width: 100%;
+    font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
+    font-size: 1.3rem;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.date {
+    font-size: 0.8rem;
+    font-style: italic;
+    line-height: 1.7rem;
+    font-weight: 300;
+    margin-right: 0.3rem;
+}
+
+.post-item-info {
+  float: right;
+  clear: both;
+}
+
+.tag {
+    font-size: 0.8rem;
+    /* border-radius: 0.25rem; */
+    background-color: #e8e8de;
+    /* color: white; */
+    padding: 0.15rem 0.2rem;
+    margin: 0 0.1rem;
+    font-weight: 300;
+}
+
+/*
+.tag {
+    border-radius: 0.25rem;
+    background-color: #262b2d;
+    color: white;
+    padding: 0.15rem 0.2rem;
+}
+*/
+
+.date-tags {
+    color:#5b5b5b;
+    font-weight: 400;
+    text-shadow: none;
+    font-size: 0.7rem;
+    display: block;
+    float: left;
+    text-align: right;
+    line-height: 2rem;
+}
+
+#articles a {
+    color: #3e4a4e;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+#articles h2 {
+  text-align: left;
+}
+
+/* Stuff for the article display */
+
+.article .sourceCode, .article pre {
+    grid-column-start: 1 !important;
+    grid-column-end: 3 !important;
+    justify-self: stretch;
+    margin-bottom: 0.4rem;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.95) and (max-width: 1000px) { 
+    .article h1 {
+        grid-column-start: 1 !important;
+        grid-column-end: 3 !important;
+        justify-self: stretch;
+    }    
+}
+
+h1, h2, h3, h4, h5, h5 {
+    text-align: left;
+}
+
+.article .footnotes-end-of-block {
+    grid-column-start: 2 !important;
+    grid-column-end: 3 !important;
+    justify-self: stretch;
+    margin-left: 2.5rem;
+    border-top: 1px solid black;
+    padding-top: 0.5rem;
+    opacity: 0.85;
+}
+
+
+.footnotes-end-of-block li, .footnotes-end-of-block p {
+    font-size: 0.8rem;
+}
+
+.footnotes-end-of-block ul {
+    margin: 0.2rem 0 !important;
+}
+
+.article h1 {
+    color: #3e4a4e;
+    padding:0.15rem 0 0.4rem 0;
+    text-align:left;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.article h1 .date {
+    float: right;
+    padding: 0 0 0 1em;
+    font-size: 1em;
+}
+
+.article h1 .date span {
+    font-size: 1.3rem;
+}
+
+p {
+    padding:0 0 0.4rem 0;
+    font-family: "IBM Plex Serif", Garamond, Georgia, serif;
+    font-size: 1rem;
+}
+
+blockquote {
+    background: #f0f0f0;
+    border-left: 5px solid #7F1315;
+    margin: 0.5rem 1rem 0.5rem 2.5rem;
+    padding: 0.5rem 0.7rem;
+}
+
+blockquote p {
+    text-indent: 0;
+}
+
+.article h2 {
+    font-size:1.6rem;
+    padding:0.6rem 0 0.3rem 0;
+    font-weight: 500;
+    line-height: 1.7rem;
+}
+
+.article h3 {
+    font-size:1.3rem;
+    padding:0.6rem 0 0.3rem 0;
+    font-weight: 500;
+}
+
+a {
+    color: #00000f;
+}
+
+.article ul, .article ol {
+    margin:0.2rem 0 0.2rem 1.5rem;
+}
+
+.article li {
+    margin:0 0 0.2rem 0;
+}
+
+.article li p {
+    text-indent: 0;
+}
+
+pre {
+    margin:0.2rem 0;
+    padding:0.4rem 0.7rem;
+    font-size: 0.9rem;
+    font-family: "IBM Plex Mono", monospace;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Pandoc and agda */
+pre.sourceCode, pre.Agda {
+    background-color:rgba(243, 243, 187, 0.7);
+    overflow-y: auto;
+}
+
+pre {
+    overflow-y: auto;
+}
+
+table.sourceCode {
+    width:100%;
+}
+
+/*
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #00000f;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d8d8ca;
+  border-radius: 7px;
+}
+*/
+
+.article td {
+  padding: 0.1rem 0.2rem;
+}
+
+.article img {
+  max-width: 100%;
+}
+
+.figure {
+  text-align: center;
+}
+
+.center-image {
+  text-align: center;
+}
+
+.sc {
+  font-variant: small-caps;
+}
+
+.yt {
+  text-align: center;
+  margin: 0.3rem 0;
+}
+
+sup, sub {
+   vertical-align: baseline;
+   position: relative;
+   top: -0.4rem;
+}
+
+sub {
+    top: 0.4rem;
+}
+
+small {
+  font-size: 0.8rem;
+}
+
+.presentation-section {
+    min-height: 100vh;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.article h2 {
+    margin-bottom: 0.5rem;
+}
+
+.todo {
+    color: rgb(231, 0, 0);
+    font-weight: 500;
+}

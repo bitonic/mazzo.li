@@ -1,0 +1,36 @@
+Name:               website
+Version:            0.0.0
+Synopsis:           Personal website of Francesco Mazzoli
+Description:        Personal website of Francesco Mazzoli
+Homepage:           http://mazzo.li/
+License:            BSD3
+License-file:       LICENSE
+Author:             Francesco Mazzoli
+Maintainer:         f@mazzo.li
+Copyright:          (C) 2012-2021 Francesco Mazzoli
+Category:           Web
+Build-type:         Simple
+Cabal-version:      >= 1.8
+
+Executable site
+  Main-is:        site.hs
+  Other-Modules:  KaTeXify
+  Ghc-options:    -Wall
+
+  Build-depends:
+    base,
+    hakyll,
+    Agda,
+    pandoc,
+    hakyll,
+    hakyll-agda,
+    filepath,
+    template-haskell,
+    directory,
+    process,
+    pandoc-types,
+    text,
+    blaze-html,
+    blaze-markup,
+    groom
+

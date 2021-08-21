@@ -1,0 +1,34 @@
+body {
+    width: 40em;
+    max-width: 1060px;
+    margin: 1.5em;
+    background-color: black;
+    background-image: url('/assets/images/home_bg.jpg');
+    background-repeat:no-repeat;
+    background-position:left top;
+    color: black;
+    font-family: "IBM Plex Serif", Garamond, serif;
+    font-size: 1.1em;
+}
+
+a {
+    color: black;
+}
+
+a:visited {
+    color: black;
+}
+
+.interesting {
+    font-weight: bold;
+}
+
+p {
+    background-color: rgba(255,255,255,0.8);
+    padding: 0.8em 1em;
+    margin: 0.4em 0;
+}
+
+tt {
+    font-family: "IBM Plex Mono", monospace;
+}
