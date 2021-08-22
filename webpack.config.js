@@ -51,6 +51,10 @@ module.exports = {
   output: {
     filename: 'scripts.js',
     path: path.resolve(__dirname, 'assets/webpack'),
+    publicPath: '/assets/webpack',
   },
   devtool: isDevelopment ? 'inline-source-map' : undefined,
+  devServer: {
+    static: path.join(__dirname, "_site"),
+  },
 };
