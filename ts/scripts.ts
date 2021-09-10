@@ -32,55 +32,57 @@ declare global {
 }
 
 window.enablePresentationMode = () => {
-  // break up the article into sections
-  const article = document.getElementsByClassName("article")[0];
-  if (!article) { return; }
-  const sections: HTMLDivElement[] = [];
-  const createSection = () => {
-    const section = document.createElement("div");
-    section.classList.add("presentation-section");
-    sections.push(section);
-  }
-  createSection();
-  const addToSection = (node: Node) => {
-    sections[sections.length-1]!.appendChild(node);
-  }
-  while (article.firstChild) {
-    const child = article.firstChild;
-    if (child instanceof HTMLHRElement) {
-      createSection();
-      article.removeChild(child);
-    } else {
-      addToSection(child);
+  document.addEventListener("DOMContentLoaded", async () => {
+    // break up the article into sections
+    const article = document.getElementsByClassName("article")[0];
+    if (!article) { return; }
+    const sections: HTMLDivElement[] = [];
+    const createSection = () => {
+      const section = document.createElement("div");
+      section.classList.add("presentation-section");
+      sections.push(section);
     }
-  }
-  for (const section of sections) {
-    article.appendChild(section);
-  }
-  let currentSection = 0;
-  if (document.location.hash && !isNaN(parseInt(document.location.hash.slice(1)))) {
-    currentSection = parseInt(document.location.hash.slice(1));
-    sections[currentSection].scrollIntoView();
-  }
-  document.body.addEventListener("keydown", (ev) => {
-    let scrollTo = false;
-    if (ev.key === "PageDown") {
-      if (currentSection < sections.length - 1) {
-        currentSection++;
-        scrollTo = true;
-      }
-    } else if (ev.key === "PageUp") {
-      if (currentSection > 0) {
-        currentSection--;
-        scrollTo = true;
-      }
-    } else if (ev.key === " ") {
-      scrollTo = currentSection >= 0 && currentSection < sections.length;
+    createSection();
+    const addToSection = (node: Node) => {
+      sections[sections.length-1]!.appendChild(node);
     }
-    if (scrollTo) {
-      ev.preventDefault();
+    while (article.firstChild) {
+      const child = article.firstChild;
+      if (child instanceof HTMLHRElement) {
+        createSection();
+        article.removeChild(child);
+      } else {
+        addToSection(child);
+      }
+    }
+    for (const section of sections) {
+      article.appendChild(section);
+    }
+    let currentSection = 0;
+    if (document.location.hash && !isNaN(parseInt(document.location.hash.slice(1)))) {
+      currentSection = parseInt(document.location.hash.slice(1));
       sections[currentSection].scrollIntoView();
-      document.location.hash = currentSection.toString();
     }
-  })
+    document.body.addEventListener("keydown", (ev) => {
+      let scrollTo = false;
+      if (ev.key === "PageDown") {
+        if (currentSection < sections.length - 1) {
+          currentSection++;
+          scrollTo = true;
+        }
+      } else if (ev.key === "PageUp") {
+        if (currentSection > 0) {
+          currentSection--;
+          scrollTo = true;
+        }
+      } else if (ev.key === " ") {
+        scrollTo = currentSection >= 0 && currentSection < sections.length;
+      }
+      if (scrollTo) {
+        ev.preventDefault();
+        sections[currentSection].scrollIntoView();
+        document.location.hash = currentSection.toString();
+      }
+    })
+  });
 }

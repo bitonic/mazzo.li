@@ -280,9 +280,17 @@ table {
 }
 
 /* Pandoc and agda */
-pre.sourceCode, pre.Agda {
+pre {
     background-color:rgba(243, 243, 187, 0.7);
     overflow-y: auto;
+}
+
+p code {
+    background-color:rgba(243, 243, 187, 0.3);
+}
+
+p code {
+    padding: 0 0.2rem;
 }
 
 pre {
@@ -363,4 +371,8 @@ small {
 .todo {
     color: rgb(231, 0, 0);
     font-weight: 500;
+}
+
+.footer {
+    margin-bottom: 0.5rem;
 }
