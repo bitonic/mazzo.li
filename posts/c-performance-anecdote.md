@@ -143,6 +143,8 @@ When `modulus` is static, `gcc` / `clang` know that it is private to the current
 
 Note how the original value of modulus was $2^{31}$, that is, $2147483648$, while the constant in the assembly above is $2147483647$. So we go from `10000000000000000000000000000000` to `1111111111111111111111111111111`.
 
-`gcc` / `clang` can't assume much on the value of the non-static version since the resulting object file could be linked with another object injecting code which runs before main, e.g. through the constructor of a global object in C++ or through `__attribute__((constructor))`.
+More generally, compilers will turn divisions by constants into cheaper bit-twiddlings and multiplications. [There are](https://libdivide.com/) [also libraries](https://crates.io/crates/reciprocal) to do this at runtime.
 
-I _think_ they could concievably assume that the value of `modulus` won't be changed in this case, since we're producing an executable directly, but it's probably annoying to have an optimization looking so far into the future of the compiler pipeline.
+In this case `gcc` / `clang` can't assume much on the value of the non-static version since the resulting object file could be linked with another object injecting code which runs before main, e.g. through the constructor of a global object in C++ or through `__attribute__((constructor))`.
+
+I _think_ they could concievably assume that the value of `modulus` won't be changed, since we're producing an executable directly, but it's probably annoying to have an optimization looking so far into the future of the compiler pipeline.
