@@ -188,7 +188,7 @@ Nonetheless the truncated series start out good at the origin, but struggle to c
 
 To cover the end points, we can tweak the coefficients to minimize the _max error_ within our interval. This will basically involve "stretching" the approximation a bit so that it doesn't return any egregiously bad results.
 
-We won't cover the details of how the efficients are tuned,[^remez] but if you browse the `glibc` sources provided by your system you will find [magic](https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/ieee754/flt-32/e_acosf.c;h=ce688c98026559c2b9a9de4c5cad5f85ad8a7c4c;hb=6e8a0aac2f883a23efb1683b120499138f9e6021#l20) [numbers](https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/ieee754/flt-32/s_atanf.c;h=f61b0f5ef64866fb053a87f9c1a968165ba4de2a;hb=6e8a0aac2f883a23efb1683b120499138f9e6021#l40) which are none other than optimized coefficients to power series.
+We won't cover the details of how the coefficients are tuned,[^remez] but if you browse the `glibc` sources provided by your system you will find [magic](https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/ieee754/flt-32/e_acosf.c;h=ce688c98026559c2b9a9de4c5cad5f85ad8a7c4c;hb=6e8a0aac2f883a23efb1683b120499138f9e6021#l20) [numbers](https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/ieee754/flt-32/s_atanf.c;h=f61b0f5ef64866fb053a87f9c1a968165ba4de2a;hb=6e8a0aac2f883a23efb1683b120499138f9e6021#l40) which are none other than optimized coefficients to power series.
 
 [^remez]: See [Remez algorithm](https://en.wikipedia.org/wiki/Remez_algorithm) for a procedure to coefficients which is implemented in many numerical libraries.
 
