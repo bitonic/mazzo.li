@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         displayMode: mathElements[i].classList.contains('display'),
         throwOnError: false,
         macros: [],
+        fleqn: (window as any).fleqn || false,
       });
     }
   }
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 declare global {
   interface Window {
     enablePresentationMode: () => void;
+    lanczosImageScaling: () => void;
   }
 }
 
@@ -85,4 +87,26 @@ window.enablePresentationMode = () => {
       }
     })
   });
+}
+
+window.lanczosImageScaling = () => {
+  let lastDevicePixelRatio: null | number = null;
+  const adjustImages = () => {
+    if (lastDevicePixelRatio !== window.devicePixelRatio) {
+      const update = (cls: string, edge: number) => {
+        let els = document.querySelectorAll(cls);
+        let pxs = edge/window.devicePixelRatio;
+        for (let i = 0; i < els.length; i++) {
+          const el = els[i] as HTMLImageElement;
+          el.style.width = `${pxs}px`;
+          el.style.height = `${pxs}px`;
+        }
+      }
+      update(".sample img", 300)
+      update(".sample", 300)
+      update(".sample-big img", 600)
+    }
+    window.requestAnimationFrame(adjustImages);
+  };
+  window.requestAnimationFrame(adjustImages);
 }

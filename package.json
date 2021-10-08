@@ -24,7 +24,8 @@
     "@fontsource/ibm-plex-serif": "^4.3.0",
     "@fontsource/jetbrains-mono": "^4.3.0",
     "@fontsource/jost": "^4.3.0",
-    "katex": "^0.13.9"
+    "katex": "^0.13.9",
+    "sql.js": "^1.8.0"
   },
   "scripts": {
     "build": "NODE_ENV=development webpack",

@@ -83,7 +83,7 @@ int main(void) {
   }
   madvise(buf, size, MADV_HUGEPAGE);
   // allocate and check each page
-  for (void* end = buf + size; buf < end; buf += huge_page_size) {
+  for (void* end = buf + size; buf < end; buf += HPAGE_SIZE) {
     // allocate page
     memset(buf, 0, 1);
     // check the page is indeed huge

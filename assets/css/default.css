@@ -83,12 +83,11 @@ sup {
 #wrapper {
     margin: 0 2rem 2rem 2rem;
     display: grid;
-    grid-template-columns: 60% 40%;
+    grid-template-columns: min(60%, 42rem) min(40%, 28rem) auto;
     row-gap: 0;
     column-gap: 0;
     grid-auto-flow: row;
-    width: 70rem;
-    max-width: calc(100vw - 5rem);
+    width: calc(100% - 4rem);
 }
 
 #wrapper > * {
@@ -323,6 +322,10 @@ table.sourceCode {
   text-align: center;
 }
 
+.center-image-rounded img {
+  border-radius: 0.25rem;
+}
+
 .sc {
   font-variant: small-caps;
 }
@@ -457,4 +460,162 @@ hr, ul, ol, .article .sourceCode, .article pre, .article h1, .article h2, .artic
 
 .page-sizes-table .even {
   background-color: #00000012;
+}
+
+/* Lanczos */
+
+.filters-showcase-container {
+  grid-column-end: 4 !important;
+  overflow-y: auto;
+  margin: 0.5rem 0 1rem 0;
+  padding: 0.5rem 0 0.5rem 0;
+  text-align: left;
+}
+
+.filter-showcase-caption {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.filters-showcase {
+  emtpy-cells: show;
+  font-size: 0.8rem;
+  font-weight: normal;
+  border: 0;
+  margin-left: 0;
+}
+
+.filters-showcase th, td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.filters-showcase tbody th {
+  padding: 0 0.50rem;
+  position: sticky;
+  z-index: 1;
+  left: 0;
+  background-color: #FFFFF0F0;
+}
+
+.filters-showcase .original {
+  background-color: #F3F3F3F0;
+}
+
+.filters-showcase td {
+  padding: 0;
+  margin: 0;
+}
+
+.filters-showcase .name {
+  font-weight: normal;
+  font-style: italic;
+}
+
+.filters-showcase .sample {
+  max-width: max(80px, min(calc(100vh/5 - 2rem), 140px));
+  max-height: max(80px, min(calc(100vh/5 - 2rem), 140px));
+  overflow: hidden;
+}
+
+/* We can't use background image because we can't apply the crisp-edges filter */
+.filters-showcase .sample img, .sample-big img {
+  max-width: none;
+  /*
+    According to the latest standard, the right thing is crisp-edges, but chrome doesn't
+    support it yet. This is from puzzlescript.
+  */
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.filters-showcase .sample img {
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.filters-showcase-container .filters-showcase .sample img {
+  margin-left: 50%;
+  margin-top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.filters-showcase .sample img {
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.full-width-image img {
+  width: 100%;
+}
+
+.lanczos-table table {
+  width: 100%;
+}
+
+.lanczos-table td {
+  font-size: smaller;
+}
+
+.lanczos-table img {
+  width: 100%;
+}
+
+.lanczos-fourier-showcase {
+  grid-column-end: 3 !important;
+}
+
+
+.lanczos-fourier-showcase-full {
+  grid-column-end: 3 !important;
+  overflow-y: auto;
+}
+
+.lanczos-fourier-showcase-full p {
+  padding: 0;
+}
+
+.lanczos-fourier-showcase-full img {
+  width: 70rem;
+  max-width: none;
+}
+
+.lanczos-maths {
+  grid-column-end: 3 !important;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.large-image {
+  text-align: center;
+}
+
+@media (orientation: portrait) or (max-width: 800px) { 
+  .large-image {
+    grid-column-end: 3 !important;
+  }
+
+  .large-image img {
+    width: 100%;
+  }
+}
+
+.extra-large-image {
+  grid-column-end: 3 !important; 
+}
+
+@media (orientation: portrait) or (max-width: 800px) { 
+  .extra-large-image img {
+    width: 100%;
+  }
+}
+
+.footnote-ref {
+  text-decoration: none;
+}
+
+.footnote-ref sup {
+  text-decoration: underline;
 }

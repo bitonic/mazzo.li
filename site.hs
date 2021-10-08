@@ -17,7 +17,7 @@ import qualified Data.Text as T
 
 main :: IO ()
 main = hakyll $ do -- Assets
-  match ("assets/images/*" .||. "assets/css/*" .||. "assets/js/*" .||. "assets/other/*" .||. "assets/webpack/*") $ do
+  match "assets/**" $ do
     route idRoute
     compile copyFileCompiler
 
