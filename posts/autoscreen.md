@@ -3,13 +3,13 @@ title: Persistent SSH sessions with proper scrollback
 date: 2017-02-11
 ---
 
-TL;DR: Put the code snippet below in `~/.profile` or whatever startup
+**TL;DR:** Put the code snippet below in `~/.profile` or whatever startup
 script for your shell, and then use `autoscreen <ssh-arguments>` to get
 persistent SSH sessions.
 
-Due to my job and my friends, I often find myself abroad, and I like to
-SSH into my powerful desktop from my laptop to develop various projects
-that are either too slow on my laptop or cannot be easily built on macOS.
+As many of us, I often find myself working on remote machines through SSH while on the
+go. Doing this is problematic if you're on unreliable connections, or simply want
+to close your laptop and continue working later.
 
 The most common solution for this problem is to use a terminal multiplexer
 like `screen` or `tmux` to make sure that you won't lose whatever you're
@@ -33,8 +33,16 @@ or equivalent:
 
 ```
 function autoscreen() {
-  AUTOSSH_GATETIME=5 autossh -M 0 -- -o "ServerAliveInterval 5" -o "ServerAliveCountMax 1" -t $@ $'bash -c \'tmpScreenConfig=$(mktemp); echo "termcapinfo xterm* ti@:te" >> $tmpScreenConfig; echo "altscreen on" >> $tmpScreenConfig; echo "maptimeout 1" >> $tmpScreenConfig; echo "startup_message off" >> $tmpScreenConfig; echo "msgwait 0" >> $tmpScreenConfig; exec screen -c $tmpScreenConfig -S "autosession-'$RANDOM$RANDOM$RANDOM$RANDOM$'" -RD\''
-}  
+  AUTOSSH_GATETIME=5 autossh -M 0 -- -o "ServerAliveInterval 5" -o "ServerAliveCountMax 1" -t $@ $'bash -c \'tmpScreenConfig=$(mktemp); echo "termcapinfo xterm* ti@:te" >> $tmpScreenConfig; echo "altscreen on" >> $tmpScreenConfig; echo "maptimeout 0" >> $tmpScreenConfig; echo "startup_message off" >> $tmpScreenConfig; echo "msgwait 0" >> $tmpScreenConfig; exec screen -c $tmpScreenConfig -S "autosession-'$RANDOM$RANDOM$RANDOM$RANDOM$'" -RD\''
+}
+```
+
+Now that I'm using NixOS, I just have the following in my `systemPackages`, which is even handier since it'll be available everywhere, not only in `bash`:
+
+```
+autoscreen = pkgs.writeScriptBin "autoscreen" ''
+  AUTOSSH_GATETIME=5 ${pkgs.autossh}/bin/autossh -M 0 -- -o "ServerAliveInterval 5" -o "ServerAliveCountMax 1" -t $@ $'bash -c \'tmpScreenConfig=$(mktemp); echo "termcapinfo xterm* ti@:te" >> $tmpScreenConfig; echo "altscreen on" >> $tmpScreenConfig; echo "maptimeout 0" >> $tmpScreenConfig; echo "startup_message off" >> $tmpScreenConfig; echo "msgwait 0" >> $tmpScreenConfig; exec screen -c $tmpScreenConfig -S "autosession-'$RANDOM$RANDOM$RANDOM$RANDOM$'" -RD\' '
+'';
 ```
 
 You can then use `autoscreen` like you'd use `ssh`, e.g.
@@ -47,7 +55,7 @@ and if the connection goes down for whatever reason `autossh` will soon
 reconnect and reattach the session. All of this while still having proper
 scrollback, copy paste, and reflow!
 
-Note that even if your computer dies you can still recover the session
+Note that even if your client dies you can still recover the session
 by manually listing them and trying out the ones with an `autosession-`
 prefix.
 
@@ -69,8 +77,11 @@ For the curious, explanation of the parameters:
     - A side effect of the above is that you'll get the output
       of `less` or `vim` in the scrollback, which is inconvenient.
       `altscreen on` removes this side effect;
-    - `maptimeout 1` minimize the delay when pressing ESC, which
-    is very annoying when using vim or in my case kakoune.
+    - `maptimeout 0` minimize the delay when pressing ESC, which
+    is very annoying when using vim or in my case kakoune. Note that to make
+    kakoune or vim register ESC keys inside `screen` you also need to [turn
+    off mouse integration](https://github.com/mawww/kakoune/issues/1858#issuecomment-939427528). 
+    - `startup_message off` and `msgwait 0` which removes `screen` startup messages.
 * The session name is composed of `autosession-` postfixed
   with 4 random numbers;
 * The `-RD` option that we pass to screen makes it so that
