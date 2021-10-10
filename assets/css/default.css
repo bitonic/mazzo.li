@@ -376,3 +376,33 @@ small {
 .footer {
     margin-bottom: 0.5rem;
 }
+
+.article hr {
+    width: 100%;
+}
+
+hr {
+    border: none;
+    margin: 0;
+    margin-bottom: 0.4rem;
+}
+
+hr::before {
+    content: '❦ ❦ ❦';
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    color: rgb(104, 104, 104);
+}
+
+.footer hr {
+    /* border: 0.1rem inset rgb(0, 0, 15);*/
+    border-top-width: 0.1rem;
+    border-top-style: solid;
+    border-color: rgb(104, 104, 104);
+    margin-top: 0.4rem;
+}
+
+.footer hr::before {
+    content: '';
+}
