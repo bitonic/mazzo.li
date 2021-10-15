@@ -29,6 +29,6 @@ p {
     margin: 0.4em 0;
 }
 
-tt {
+tt, code {
     font-family: "IBM Plex Mono", monospace;
 }
