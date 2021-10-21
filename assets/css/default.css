@@ -32,7 +32,7 @@ html * {
 */
 @media (-webkit-min-device-pixel-ratio: 1.95) and (max-width: 1000px) and (orientation: portrait) { 
     html {
-        font-size: 2rem;
+        font-size: 1.9rem;
     }
 }
 
@@ -405,4 +405,15 @@ hr::before {
 
 .footer hr::before {
     content: '';
+}
+
+:is(h2, h3, h4, h5, h6) .section-link {
+    font-style: italic;
+    text-decoration: none;
+    color: rgba(128, 128, 128, 0.678);
+}
+
+:is(h2, h3, h4, h5, h6):hover .section-link {
+    color: grey;
+    visibility: visible;
 }

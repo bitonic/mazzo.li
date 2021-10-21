@@ -12,6 +12,7 @@ import           Hakyll.Web.Agda
 import           Text.Pandoc.Options
 import           KaTeXify
 import qualified Text.Pandoc as Pandoc
+import qualified Text.Pandoc.Walk as Pandoc
 import qualified Data.Text as T
 
 main :: IO ()
@@ -131,5 +132,12 @@ pandocMathAndAgdaCompiler = do
   i <- getUnderlying
   katex <- getMetadataField i "katex"
   let katexTransform = if isJust katex then unsafeCompiler . kaTeXifyIO else return
+  -- See <https://frasertweedale.github.io/blog-fp/posts/2020-12-10-hakyll-section-links.html>
+  let sectionLinkTransform :: Monad m => Pandoc.Pandoc -> m Pandoc.Pandoc
+      sectionLinkTransform = return . Pandoc.walk f where
+        f (Pandoc.Header n attr@(idAttr, _, _) inlines) | n > 1 =
+          let link = Pandoc.Link ("", ["section-link"], []) [Pandoc.Str "#"] ("#" <> idAttr, "")
+          in Pandoc.Header n attr (inlines <> [Pandoc.Space, link])
+        f x = x
   sidenotes <- maybe False (== "true") <$> getMetadataField i "sidenotes"
-  pandocAgdaCompilerWithTransformM defaultHakyllReaderOptions (writerOpts sidenotes) agdaOpts katexTransform
+  pandocAgdaCompilerWithTransformM defaultHakyllReaderOptions (writerOpts sidenotes) agdaOpts (sectionLinkTransform >=> katexTransform)
