@@ -25,9 +25,9 @@ The code works but has some rough edges:
   adapted from the one distributed with Agda, is provided in the package.
 
 An example of the package in action can be found in the
-[Haskell code](https://github.com/bitonic/website) that generates this website,
-where [`site.hs`](https://github.com/bitonic/website/blob/master/site.hs) is the
+[Haskell code](https://github.com/bitonic/mazzo.li) that generates this website,
+where [`site.hs`](https://github.com/bitonic/mazzo.li/blob/master/site.hs) is the
 main generator and
-[`posts/AgdaSort.lagda`](https://github.com/bitonic/website/blob/master/posts/AgdaSort.lagda)
+[`posts/AgdaSort.lagda`](https://github.com/bitonic/mazzo.li/blob/master/posts/AgdaSort.lagda)
 (and the respective metadata file) is a literate Agda file that generates the
 post mentioned before.

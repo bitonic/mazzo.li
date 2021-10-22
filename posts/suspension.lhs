@@ -62,7 +62,7 @@ $ stack --resolver lts-8.11 ghci
 Prelude> :l suspension.lhs
 ```
 
-You can also see the file [on GitHub](https://github.com/bitonic/website/blob/22b5cbf6fad4e63d9d77392f6fa6944bb55aab07/posts/suspension.lhs).
+You can also see the file [on GitHub](https://github.com/bitonic/mazzo.li/blob/master/posts/suspension.lhs).
 
 Let's get started.
 

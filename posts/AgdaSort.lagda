@@ -27,7 +27,7 @@ can be proven correct.  The implementation is largely inspired by a
 McBride.
 
 This blog post was generated from a literate Agda file, that you can find
-[here](https://github.com/bitonic/website/blob/master/posts/AgdaSort.lagda).
+[here](https://github.com/bitonic/mazzo.li/blob/master/posts/AgdaSort.lagda).
 I'm not going to explain how to install Agda here, you can refer to the
 [wiki](http://wiki.portal.chalmers.se/agda/pmwiki.php) or the wonderful
 [freenode channel](irc://chat.freenode.net/agda).  While I go over all concepts

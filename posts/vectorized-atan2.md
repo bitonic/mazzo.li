@@ -500,7 +500,7 @@ In our case we simply want `NaN`s in the input to propagate in the output, so we
 
 </div>
 
-[^contract]: We could also achieve the same result by passing setting the [`-fno-honor-nans` flag](https://clang.llvm.org/docs/UsersManual.html#opt-fhonor-nans), which will make it assume that there are no `NaN`s in our code. However this is quite a blunt hammer that can cause the resulting code to be surprising, for example by silently dropping `NaN`s.
+[^contract]: We could also achieve the same result by using the [`-fno-honor-nans` flag](https://clang.llvm.org/docs/UsersManual.html#opt-fhonor-nans), which will make it assume that there are no `NaN`s in our code. However this is quite a blunt hammer that can cause the resulting code to be surprising, for example by silently dropping `NaN`s.
 
 ```c
 if (x < 0.0f) {
