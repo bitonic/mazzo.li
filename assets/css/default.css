@@ -87,7 +87,7 @@ sup {
     row-gap: 0;
     column-gap: 0;
     grid-auto-flow: row;
-    width: 60rem;
+    width: 70rem;
     max-width: calc(100vw - 4rem);
 }
 
@@ -384,14 +384,14 @@ hr::before {
     color: rgb(104, 104, 104);
 }
 
-.footer hr {
+.footnotes hr, .footer hr {
     /* border: 0.1rem inset rgb(0, 0, 15);*/
     border-top-width: 0.1rem;
     border-top-style: solid;
     border-color: rgb(104, 104, 104);
 }
 
-.footer hr::before {
+.footnotes hr::before, .footer hr::before {
     content: '';
 }
 
