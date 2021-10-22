@@ -88,7 +88,7 @@ sup {
     column-gap: 0;
     grid-auto-flow: row;
     width: 70rem;
-    max-width: calc(100vw - 4rem);
+    max-width: calc(100vw - 5rem);
 }
 
 #wrapper > * {
