@@ -7,6 +7,8 @@ sidenotes: true
 
 **Abstract**: If we have a heuristic to guess some value cheaply, we can remove a data dependency in a tight loop using the branch predictor. This allows the CPU to run more instructions in parallel, increasing performance. If this explanation does not make much sense to you, keep reading to learn about some of the magic making your CPU fast!
 
+***
+
 [Per Vognsen](https://twitter.com/pervognsen)'s twitter feed is full of neat low-level curiosities, usually leveraging CPU features for some performance benefit.
 
 [Recently](https://twitter.com/pervognsen/status/1412611878140874757) he tweeted about a trick that I had never heard of -- value speculation.[^pvk] The trick exploits the branch predictor to guess values, enabling more instruction parallelism and therefore removing a bottleneck on the L1 cache. Note that the bottleneck is _not_ due to L1 cache misses, but on L1 cache _hits_ introducing unwanted data dependencies.
@@ -110,7 +112,7 @@ loop:
   mov     rdi, qword ptr [rdi + 8] ; node = node->next
   test    rdi, rdi                 ; if node is not NULL, repeat loop,
   jne     loop                     ; otherwise exit
-end
+end:
   ret
 ```
 
