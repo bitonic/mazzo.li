@@ -438,3 +438,23 @@ hr, ul, ol, .article .sourceCode, .article pre, .article h1, .article h2, .artic
 .footnote-ref {
     margin-left: 0.15rem;
 }
+
+.page-sizes-table td, .page-sizes-table th {
+  padding: 0.1rem 0.5rem;
+}
+
+.page-sizes-table td {
+  padding-left: 0.7rem !important;
+}
+
+.page-sizes-table th {
+  padding-bottom: 0.2rem;
+}
+
+.page-sizes-table thead th {
+  border-bottom: 1px solid black;
+}
+
+.page-sizes-table .even {
+  background-color: #00000012;
+}
