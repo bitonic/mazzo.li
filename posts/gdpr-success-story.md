@@ -1,6 +1,7 @@
 ---
 title: "One weird trick to get machine-readable data out of any provider"
 date: 2021-05-10
+tags: [post, short]
 ---
 
 **TL;DR:** If you live in the EU or are a EU citizen, companies _must_ provide personal data you provided or they collected in a

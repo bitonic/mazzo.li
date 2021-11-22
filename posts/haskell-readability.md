@@ -1,6 +1,8 @@
 ---
 title: Haskell, Python, and Readability
 date: 2012-02-27
+tags: [post, short]
+description: Let’s say that you have a program which relies on huge pages for performance. I couldn’t find a resource fully explaining how to reliably allocate huge pages at runtime, so here it is.
 ---
 
 This weekend on [/r/programming](http://www.reddit.com/r/programming) someone

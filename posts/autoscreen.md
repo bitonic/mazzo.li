@@ -1,6 +1,7 @@
 ---
 title: Persistent SSH sessions with proper scrollback
 date: 2017-02-11
+tags: [post, short]
 ---
 
 **TL;DR:** Put the code snippet below in `~/.profile` or whatever startup

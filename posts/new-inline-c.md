@@ -1,6 +1,7 @@
 ---
 title: "Building inline-c projects just got a lot easier"
 date: 2017-07-23
+tags: [post, short]
 ---
 
 TL;DR: the latest version of `inline-c`,
