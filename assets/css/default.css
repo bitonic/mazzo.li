@@ -434,3 +434,7 @@ hr, ul, ol, .article .sourceCode, .article pre, .article h1, .article h2, .artic
 #articles h2 {
     margin-bottom: 0.10rem;
 }
+
+.footnote-ref {
+    margin-left: 0.15rem;
+}

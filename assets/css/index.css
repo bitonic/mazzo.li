@@ -23,10 +23,14 @@ a:visited {
     font-weight: bold;
 }
 
-p {
+p, ul {
     background-color: rgba(255,255,255,0.8);
     padding: 0.8em 1em;
     margin: 0.4em 0;
+}
+
+ul {
+    padding-left: 2rem;
 }
 
 tt, code {

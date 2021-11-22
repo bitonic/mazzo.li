@@ -198,7 +198,7 @@ a [Lorenz system](http://en.wikipedia.org/wiki/Lorenz_system), and
 then take advantage of the very nice `Chart-diagrams` Haskell library
 to display its x and z coordinates:
 
-![Lorenz system](http://i.imgur.com/GGUZvco.png)
+![Lorenz system](/assets/images/lorenz.png)
 
 In this example, the `vec-ptr` anti-quoter is used to get a pointer out
 of mutable vector:

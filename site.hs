@@ -39,7 +39,7 @@ main = hakyll $ do -- Assets
   create ["archive.html"] $ do
     route idRoute
     let archiveCtx =
-          field "posts" (\_ -> postList recentFirst) <> constField "title" "blag — index" <> defaultContext
+          field "posts" (\_ -> postList recentFirst) <> constField "title" "mazzo.li — blag — index" <> defaultContext
     compile $
       makeItem "" >>=
       loadAndApplyTemplate "templates/archive.html" archiveCtx >>=

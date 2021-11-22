@@ -20,8 +20,8 @@ That's why we wrote
 new utility useful for turning textual `.prof` reports into a pretty
 picture (click on the image to get to the interactive SVG):
 
-<a href="https://s3.amazonaws.com/download.fpcomplete.com/francesco/binary-trees.svg">
-  <img src="https://s3.amazonaws.com/download.fpcomplete.com/francesco/binary-trees.svg" alt="Flame graph for binary-trees.hs">
+<a href="/assets/images/binary-trees.svg">
+  <img src="/assets/images/binary-trees.svg" alt="Flame graph for binary-trees.hs">
 </a>
 
 In the figure above we have the flame graph for a run of a small Haskell
@@ -101,8 +101,8 @@ Let's scale this up to a larger application: consider
 [this `.prof` file](https://s3.amazonaws.com/download.fpcomplete.com/francesco/hoogle.prof),
 resulting from running `hoogle generate`, and the resulting flame graph:
 
-<a href="https://s3.amazonaws.com/download.fpcomplete.com/francesco/hoogle.svg">
-  <img src="https://s3.amazonaws.com/download.fpcomplete.com/francesco/hoogle.svg" alt="Flame graph for hoogle">
+<a href="/assets/images/hoogle.svg">
+  <img src="/assets/images/hoogle.svg" alt="Flame graph for hoogle">
 </a>
 
 Looking at the flame graph we are immediately able to understand the two
