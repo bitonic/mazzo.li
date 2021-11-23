@@ -136,7 +136,7 @@ static void check_huge_page(void* ptr) {
 
 Some useful resources apart what was already linked:
 
-* [`page-info`](https://github.com/travisdowns/page-info), a small library by Travis Downs to get most of the information out of `/proc/<pid>/pagemap` and `/proc/kpageflags`.
+* [`page-info`](https://github.com/travisdowns/page-info), a small library by Travis Downs to get most of the information out of `/proc/[pid]/pagemap` and `/proc/kpageflags`.
 * [This useful StackOverflow answer](https://stackoverflow.com/a/47823238/524111), also by Travis Downs, describing the method in this article, but without code details.
 * [`transhuge-stress.c`](https://github.com/torvalds/linux/blob/2c85ebc57b3e1817b6ce1a6b703928e113a90442/tools/testing/selftests/vm/transhuge-stress.c), a useful stress test for page tables found in the kernel tree.
 
