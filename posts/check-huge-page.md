@@ -76,9 +76,8 @@ static void check_huge_page(void* ptr);
 
 int main(void) {
   // allocate 10 huge pages
-  size_t huge_page_size = 1 << 21;
-  size_t size = huge_page_size * 10;
-  void* buf = aligned_alloc(huge_page_size, size);
+  size_t size = HPAGE_SIZE * 10;
+  void* buf = aligned_alloc(HPAGE_SIZE, size);
   if (!buf) {
     fail("could not allocate buffer: %s", strerror(errno));
   }
