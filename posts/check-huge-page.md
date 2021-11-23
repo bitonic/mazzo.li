@@ -78,7 +78,10 @@ int main(void) {
   // allocate 10 huge pages
   size_t huge_page_size = 1 << 21;
   size_t size = huge_page_size * 10;
-  void* buf = aligned_alloc(1 << 21, size);
+  void* buf = aligned_alloc(huge_page_size, size);
+  if (!buf) {
+    fail("could not allocate buffer: %s", strerror(errno));
+  }
   madvise(buf, size, MADV_HUGEPAGE);
   // allocate and check each page
   for (void* end = buf + size; buf < end; buf += huge_page_size) {
@@ -168,4 +171,7 @@ Some useful resources apart what was already linked:
 
     > Enable  Transparent  Huge Pages (THP) for pages in the range specified by addr and length.  Currently, Transparent Huge Pages work only  with  private  anonymous  pages (see `mmap(2)`).  The kernel will regularly scan the areas marked as huge page candidates to replace  them  with  huge  pages. **The kernel will also allocate huge pages directly when the region is naturally aligned to the huge page size (see `posix_memalign(2)`).**
 
-[^mmap]: Travis Downs [points out](https://twitter.com/trav_downs/status/1462929358155223043) that `mmap` might be a safer option, since `aligned_alloc` and friends might preemptively allocate pages.
+[^mmap]:
+    Travis Downs [pointed out](https://twitter.com/trav_downs/status/1462929358155223043) that `mmap` might be a safer option, since `aligned_alloc` and friends might preemptively allocate pages.
+
+    Moreover, Paul Khuong [provided a way](https://twitter.com/pkhuong/status/1462988088070791173) to easily get a huge page aligned area using `mmap`.
