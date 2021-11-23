@@ -20,7 +20,7 @@ High level steps (or [skip to the code](#code)):
 
 2. Run the program where you want to perform this check as root.[^root]
 
-3. Allocate memory using [`aligned_alloc` or `posix_memalign`](https://man7.org/linux/man-pages/man3/posix_memalign.3.html), with a 2MiB alignment --- the huge page size. Linux also supports 1GiB huge pages on some systems, but here we'll be working with 2MiB pages:[^madvise]
+3. Allocate memory using [`aligned_alloc` or `posix_memalign`](https://man7.org/linux/man-pages/man3/posix_memalign.3.html), with a 2MiB alignment --- the huge page size. Linux also supports 1GiB huge pages on some systems, but here we'll be working with 2MiB pages:[^madvise][^mmap]
 
     ```c
     void* buf = aligned_alloc(1 << 21, size);
@@ -167,3 +167,5 @@ Some useful resources apart what was already linked:
     The man page for [`madvise`](https://man7.org/linux/man-pages/man2/madvise.2.html) states (emphasis mine):
 
     > Enable  Transparent  Huge Pages (THP) for pages in the range specified by addr and length.  Currently, Transparent Huge Pages work only  with  private  anonymous  pages (see `mmap(2)`).  The kernel will regularly scan the areas marked as huge page candidates to replace  them  with  huge  pages. **The kernel will also allocate huge pages directly when the region is naturally aligned to the huge page size (see `posix_memalign(2)`).**
+
+[^mmap]: Travis Downs [points out](https://twitter.com/trav_downs/status/1462929358155223043) that `mmap` might be a safer option, since `aligned_alloc` and friends might preemptively allocate pages.
