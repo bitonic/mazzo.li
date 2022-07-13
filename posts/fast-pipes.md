@@ -14,7 +14,7 @@ In this post, we will explore how Unix pipes are implemented in Linux by iterati
 We will begin with a simple program with a throughput of around 3.5GiB/s, and improve its performance twentyfold. The improvements will be informed by profiling the program using Linux's [`perf` tooling](https://en.wikipedia.org/wiki/Perf_(Linux)).[^setup] The code [is available on GitHub](https://github.com/bitonic/pipes-speed-test).
 
 [^atan]:
-    This will be similar in style to my [`atan2f` performance investigation](/posts/vectorized-atan2.html), although the program in question will is only useful for learning.
+    This will be similar in style to my [`atan2f` performance investigation](/posts/vectorized-atan2.html), although the program in question will only be useful for learning.
 
     Moreover, we will optimize code at a different level. While tuning `atan2f` consisted in micro-optimizations guided by the assembly output, tuning our pipe program will involve looking at `perf` events and reducing various sorts of kernel overhead.
 
