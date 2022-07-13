@@ -470,7 +470,7 @@ To make these concepts less abstract, here's a visual depiction of how the virtu
 
 The search starts from the first level, called the "page global directory", or PGD, the physical location of which is stored in CR3. The first 16 bits of the address are unused.[^unused-bits] We use the next 9 bits the PGD entry, and traverse down to the second level, "page upper directory", or PUD. The next 9 bits are used to select an entry from the PUD. The process repeats for the next two levels, PMD ("page middle directory"), and PTE ("page table entry"). The PTE tells where the actual physical page we're looking for is, and then we use the last 12 bits to find the offset inside the page.
 
-[^unused-bits]: Note that the highest 16 bits are unused: this means that we each process can address at most $2^{48}-1$ bytes, or 256TiB, of physical memory.
+[^unused-bits]: Note that the highest 16 bits are unused: this means that each process can address at most $2^{48}-1$ bytes, or 256TiB, of physical memory.
 
 The sparse structure of the page table allows the mapping to be gradually built up as new pages are needed. Whenever a process needs memory, the page table will be updated with a new entry by the kernel.
 
