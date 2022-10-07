@@ -5,10 +5,8 @@
 {-# LANGUAGE LambdaCase #-}
 import           Control.Monad
 import           Data.Maybe (fromMaybe, isJust)
-import           Agda.Interaction.Options (CommandLineOptions(..), defaultOptions)
 import           Hakyll
 import           Hakyll.Core.Compiler.Internal
-import           Hakyll.Web.Agda
 import           Text.Pandoc.Options
 import           KaTeXify
 import qualified Text.Pandoc as Pandoc
@@ -26,10 +24,10 @@ main = hakyll $ do -- Assets
     compile templateCompiler
 
   -- Posts
-  match ("posts/*.md" .||. "posts/*.lagda" .||. "posts/*.lhs") $ do
+  match ("posts/*.md" .||. "posts/*.lhs") $ do
     route $ setExtension "html"
     compile $
-      pandocMathAndAgdaCompiler >>=
+      pandocMathCompiler >>=
       loadAndApplyTemplate "templates/post.html" postCtx >>=
       saveSnapshot "content" >>=
       loadAndApplyTemplate "templates/default.html" postCtx >>=
@@ -124,11 +122,8 @@ writerOpts sidenotes = defaultHakyllWriterOptions
     mathExtensions =
       [Ext_tex_math_dollars, Ext_tex_math_double_backslash, Ext_latex_macros]
 
-agdaOpts :: CommandLineOptions
-agdaOpts = defaultOptions {optIncludePaths = [".", "../agdalib/src"]}
-
-pandocMathAndAgdaCompiler :: Compiler (Item String)
-pandocMathAndAgdaCompiler = do
+pandocMathCompiler :: Compiler (Item String)
+pandocMathCompiler = do
   i <- getUnderlying
   katex <- getMetadataField i "katex"
   let katexTransform = if isJust katex then unsafeCompiler . kaTeXifyIO else return
@@ -140,4 +135,4 @@ pandocMathAndAgdaCompiler = do
           in Pandoc.Header n attr (inlines <> [Pandoc.Space, link])
         f x = x
   sidenotes <- maybe False (== "true") <$> getMetadataField i "sidenotes"
-  pandocAgdaCompilerWithTransformM defaultHakyllReaderOptions (writerOpts sidenotes) agdaOpts (sectionLinkTransform >=> katexTransform)
+  pandocCompilerWithTransformM defaultHakyllReaderOptions (writerOpts sidenotes) (sectionLinkTransform >=> katexTransform)

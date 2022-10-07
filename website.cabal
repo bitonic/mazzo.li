@@ -20,10 +20,8 @@ Executable site
   Build-depends:
     base,
     hakyll,
-    Agda,
     pandoc,
     hakyll,
-    hakyll-agda,
     filepath,
     template-haskell,
     directory,
