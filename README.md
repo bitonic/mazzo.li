@@ -25,7 +25,7 @@ $ make webpack-build-prod
 
 Copyright (c) 2012-2021 Francesco Mazzoli
 
-The content of the website (text and media) is licensed under the [Creative Commons Attribution-ShareAlike License](https://creativecommons.org/licenses/by-sa/3.0/). Note that some of the media (the binary files) aren't in this repo, but they are licensed under the same license.
+The content of the website (text and media) is licensed under the [Creative Commons Attribution-ShareAlike License](https://creativecommons.org/licenses/by-sa/3.0/). Note that the media (mostly images) is not in the repo.
 
 The code is licensed under the ISC license:
 

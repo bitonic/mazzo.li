@@ -21,13 +21,6 @@ wip/
 yarn-error.log
 .vscode
 
-# The binary assets aren't versioned
-*.png
-*.jpg
-*.pdf
-*.mp4
-*.ppm
-*.ofig
-*.gif
-*.ods
-*.nb
+# Don't store assets
+assets/images
+assets/other
