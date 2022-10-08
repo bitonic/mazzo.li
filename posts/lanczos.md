@@ -696,13 +696,13 @@ But for many applications, Lánczos (or something close to it) will be the best 
 
 ## Closing thoughts {#closing-thoughts}
 
-When I set out to write this post, I wanted to work up to Lanczos interpolation using just high-school maths. I couldn't find a way to explain it without getting quite technical, so I downgraded to an explanation targetet to an audience who has at least heard of the Fourier transform.[^cs] That said, I still hope this post could illuminate these key areas in modern engineering through a concrete example.
+When I set out to write this post, I wanted to work up to Lánczos interpolation using just high-school maths. I couldn't find a way to explain it without getting quite technical, so I downgraded to an explanation targetet to an audience who has at least heard of the Fourier transform.[^cs] That said, I still hope this post could illuminate these key areas in modern engineering through a concrete example.
 
 [^cs]: Yes, I'm talking to _you_, computer science undergraduate!
 
-Cornelius Lanczos himself brought forward a multitude of numerical methods. I highly recommend ["Applied Analysis"](https://archive.org/details/appliedanalysis00lanc_0), the book that introduced the technique explained in this post. Some of it is outdated, explaining how to manually compute roots of polynomials or solutions to linear systems. It's still very interesting, and written in an unusual conversational style that I find endearing.
+Cornelius Lánczos himself brought forward a multitude of numerical methods. I highly recommend ["Applied Analysis"](https://archive.org/details/appliedanalysis00lanc_0), the book that introduced the technique explained in this post. Some of it is outdated, explaining how to manually compute roots of polynomials or solutions to linear systems. It's still very interesting, and written in an unusual conversational style that I find endearing.
 
-Lanczos also strikes me as a delightful man, at least from two interviews I found on YouTube [about mathematics](https://www.youtube.com/watch?v=avSHHi9QCjA) and [about his life](https://www.youtube.com/watch?v=PO6xtSxB5Vg).
+Lánczos also strikes me as a delightful man, at least from two interviews I found on YouTube [about mathematics](https://www.youtube.com/watch?v=avSHHi9QCjA) and [about his life](https://www.youtube.com/watch?v=PO6xtSxB5Vg).
 
 Another reason to write this blog post was to showcase how much one can get out of software like Mathematica when playing around with such topics. In the end I mostly used Mathematica for plots, but I encourage you to look at [the notebook](/assets/other/lanczos.html) to get a peek of what's possible.
 
