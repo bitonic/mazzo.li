@@ -1,7 +1,0 @@
-packages:
-- '.'
-extra-deps:
-- hakyll-4.14.0.0@sha256:28aab547aa94202d486328aa4bbcd02ecbefc4e5d42dfa15e8137b731a4f5d55,9059
-- hakyll-agda-0.1.12@sha256:5637cb275fb1d5899efcb12db1a81674a7c5ff30266043d0260db6ad08f1a190,1299
-resolver: lts-17.5
-

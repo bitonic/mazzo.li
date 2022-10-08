@@ -14,13 +14,14 @@ dist/
 assets/css/cv*
 cv*
 .stack-work
-assets/webpack
 bits/
 node_modules
 wip/
 yarn-error.log
 .vscode
+ideas
 
 # Don't store assets
 assets/images
 assets/other
+assets/webpack
