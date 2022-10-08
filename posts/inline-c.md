@@ -8,6 +8,13 @@ tags:
 
 **Update**: I gave <a href="https://skillsmatter.com/skillscasts/6546-call-c-functions-from-haskell-without-bindings">a talk</a> at the Haskell eXchange 2015 on this topic.
 
+<div>
+  <video controls  style="width: 100%; max-width: 100%">
+    <source src="/assets/other/inline-c-talk.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
 ***
 
 *This article was originally published on the

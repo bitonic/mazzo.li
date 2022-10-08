@@ -7,9 +7,11 @@ tags:
 ---
 
 <p><strong>Update</strong>: I gave a talk at NY Haskell following this blogpost, although I didn’t manage to talk about everything:</p>
-<div class="yt">
-<iframe src="//player.vimeo.com/video/77168227" width="600" height="337" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-</iframe>
+<div>
+  <video controls  style="width: 100%; max-width: 100%">
+    <source src="/assets/other/lambda-talk.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 </div>
 <hr />
 <p>In the <a href="../posts/AgdaSort.html">previous Agda example</a> we saw how we can approach the task of verifying a sorting function. This time, we are going to write a type checker for the simply typed λ-calculus, plus a simple optimization on said terms that we will prove correct. As in the other post the bulk of the thinking has been done by other people. The type checking is a modified version of an example given in <a href="http://strictlypositive.org/view.ps.gz"><em>The View from the Left</em></a> by Conor McBride and James McKinna,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> while the optimisation is inspired from a talk given by Adam Chlipala at POPL 2013—his Coq book <a href="http://adam.chlipala.net/cpdt/"><em>Certified Programming with Dependent Types</em></a> contains many similar examples.</p>

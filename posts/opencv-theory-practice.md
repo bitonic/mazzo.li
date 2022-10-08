@@ -14,9 +14,14 @@ I explained how the bindings work and then proceeded to write a few filters
 that worked on the live feed from my webcam, including a nice Snapchat inspired
 filter that replaces human eyes with nice manga eyes:
 
-<div class="center-image">![Manga eyes filter](/assets/images/manga-eyes-snapshot.png)</div>
+<div>
+  <video controls  style="width: 100%; max-width: 100%" poster="/assets/images/manga-eyes-snapshot.png">
+    <source src="/assets/other/haskell-opencv.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
-You can find a recording of the video at
+You can find the original recording of the video at
 <https://skillsmatter.com/skillscasts/8991-haskell-and-opencv-theory-and-practice>,
 the repository with the showcased code at
 <https://github.com/bitonic/hs-cam-filter>, and the slides at
