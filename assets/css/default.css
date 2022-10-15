@@ -82,15 +82,18 @@ sup {
 
 #wrapper {
     margin: 0 2rem 2rem 2rem;
-    display: grid;
-    grid-template-columns: min(60%, 42rem) min(40%, 28rem) auto;
-    row-gap: 0;
-    column-gap: 0;
-    grid-auto-flow: row;
     width: calc(100% - 4rem);
 }
 
-#wrapper > * {
+#wrapper, #comments {
+  display: grid;
+  grid-template-columns: min(60%, 42rem) min(40%, 28rem) auto;
+  row-gap: 0;
+  column-gap: 0;
+  grid-auto-flow: row;
+}
+
+#wrapper > *, #comments > * {
     grid-column-start: 1;
     grid-column-end: 2;
 }
@@ -187,8 +190,7 @@ h1, h2, h3, h4, h5, h5 {
     opacity: 0.85;
 }
 
-
-.footnotes-end-of-block li, .footnotes-end-of-block p {
+.footnotes-end-of-block, .footnotes-end-of-block li, .footnotes-end-of-block p {
     font-size: 0.8rem;
 }
 
@@ -368,6 +370,7 @@ small {
 
 .footer {
     margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 .article hr {
@@ -387,14 +390,14 @@ hr::before {
     color: rgb(104, 104, 104);
 }
 
-.footnotes hr, .footer hr {
+#comments hr, .footnotes hr, .footer hr {
     /* border: 0.1rem inset rgb(0, 0, 15);*/
     border-top-width: 0.1rem;
     border-top-style: solid;
     border-color: rgb(104, 104, 104);
 }
 
-.footnotes hr::before, .footer hr::before {
+#comments hr::before, .footnotes hr::before, .footer hr::before {
     content: '';
 }
 
@@ -618,4 +621,30 @@ hr, ul, ol, .article .sourceCode, .article pre, .article h1, .article h2, .artic
 
 .footnote-ref sup {
   text-decoration: underline;
+}
+
+/* Comments */
+
+#comments {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  margin-bottom: 0.5rem;
+}
+
+.operator {
+  font-weight: bold;
+}
+
+.comment-date {
+  font-style: italic;
+}
+
+.comment hr {
+  border-top-width: 0.1rem;
+  width: calc(100% - 1rem);
+  border-color: rgb(104, 104, 104, 0.5) !important;
+}
+
+.comment blockquote {
+  margin-left: 1rem;
 }

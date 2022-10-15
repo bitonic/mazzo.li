@@ -463,7 +463,7 @@ Shannon-Nyquist tells us that that we need to sample at a frequency greater than
 
 The dramatic switch from $\xi = 2$ to $\xi = 2.01$ is no accident: our highest frequency sits right at the boundary of the spectrum, so we need to go past it to capture it.[^dirac-deltas]
 
-[^dirac-deltas]: This is why this post and most sources (including Shannon's original paper) are careful to state we need to sample at a rate _greater_ than $\xi$.
+[^dirac-deltas]: This is why this post and most sources are careful to state we need to sample at a rate _greater_ than $\xi$.
 
 While I wanted to give a good intuition on why $\mathrm{sinc}$ is such a mathematically sound interpolator, when interpolating we usually don't really know nor care what the frequency of the original image is. However, $\mathrm{sinc}$ is still the starting point for many interpolation functions given its ideal properties.
 
@@ -681,7 +681,7 @@ That said, a bit of ringing remains. This is the main drawback with Lánczos or 
  <tr>
    <th style="font-weight: normal; font-size: 0.9rem;">Nearest</th>
    <th style="font-weight: normal; font-size: 0.9rem;">$\langle \mathrm{sinc} \rangle_3$</th>
-   <th style="font-weight: normal; font-size: 0.9rem;">$\mathrm{Lánczos}_3$</th>
+   <th style="font-weight: normal; font-size: 0.9rem;">$\mathrm{Lanczos}_3$</th>
 </thead>
 <tbody>
  <tr>

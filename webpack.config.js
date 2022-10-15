@@ -1,6 +1,6 @@
 const path = require('path');
-
 const isDevelopment = process.env.NODE_ENV !== 'production';
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 console.log({
   isDevelopment,
@@ -55,6 +55,15 @@ module.exports = {
   },
   devtool: isDevelopment ? 'inline-source-map' : undefined,
   devServer: {
+    port: 5000,
     static: path.join(__dirname, "_site"),
+    proxy: {
+      '/comments-api': 'http://127.0.0.1:5002',
+    },
+    liveReload: false,
+    hot: false,
   },
+  plugins: [
+    new BundleAnalyzerPlugin(),
+  ],
 };

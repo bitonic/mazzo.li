@@ -13,16 +13,18 @@ let
         [ "website.cabal" "Setup.hs" "site.hs" "LICENSE" "KaTeXify.hs" ])
       ./.)
     { };
-  node = import ./node.nix { inherit pkgs; };
+in {
+  inherit website;
+  website-shell = pkgs.mkShell {
+    buildInputs = [
+      website
+      (pkgs.python3.withPackages (p: [p.gunicorn]))
+      pkgs.msmtp
+    ];
+  };
   yarn-shell = pkgs.mkShell {
     buildInputs = with pkgs; [
       yarn
     ];
   };
-in {
-  inherit website;
-  website-shell = pkgs.mkShell {
-    buildInputs = [ website ];
-  };
-  inherit yarn-shell;
 }

@@ -25,3 +25,5 @@ ideas
 assets/images
 assets/other
 assets/webpack
+assets/comments/
+__pycache__

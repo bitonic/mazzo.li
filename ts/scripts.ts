@@ -9,6 +9,7 @@ import "@fontsource/ibm-plex-serif/400-italic.css";
 import "@fontsource/ibm-plex-mono"
 import "@fontsource/ibm-plex-mono/500.css"
 
+// KaTeX
 document.addEventListener("DOMContentLoaded", async () => {
   const katex = await import(/* webpackChunkName: "katex" */ "katex");
   
@@ -16,15 +17,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   for (let i = 0; i < mathElements.length; i++) {
     const texText = mathElements[i].firstChild;
     if (mathElements[i].tagName == "SPAN") {
-      katex.render((texText as any).data, mathElements[i] as HTMLElement, {
-        displayMode: mathElements[i].classList.contains('display'),
+      const opts: katex.KatexOptions = {
+        displayMode: mathElements[i].classList.contains("display"),
         throwOnError: false,
         macros: [],
         fleqn: (window as any).fleqn || false,
-      });
+      }
+      katex.render((texText as any).data, mathElements[i] as HTMLElement, opts);
     }
   }
 });
+
+// Comment box
+document.addEventListener("DOMContentLoaded", async () => {
+  const commentContainer = document.getElementById("comments")
+  if (!commentContainer) { return ; }
+
+  const comments = await import(/* webpackChunkName: "comments" */ "comments")
+  comments.run(commentContainer)
+})
 
 declare global {
   interface Window {
@@ -90,12 +101,12 @@ window.enablePresentationMode = () => {
 }
 
 window.lanczosImageScaling = () => {
-  let lastDevicePixelRatio: null | number = null;
+  const lastDevicePixelRatio: null | number = null;
   const adjustImages = () => {
     if (lastDevicePixelRatio !== window.devicePixelRatio) {
       const update = (cls: string, edge: number) => {
-        let els = document.querySelectorAll(cls);
-        let pxs = edge/window.devicePixelRatio;
+        const els = document.querySelectorAll(cls);
+        const pxs = edge/window.devicePixelRatio;
         for (let i = 0; i < els.length; i++) {
           const el = els[i] as HTMLImageElement;
           el.style.width = `${pxs}px`;
