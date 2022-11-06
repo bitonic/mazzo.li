@@ -7,7 +7,7 @@ description: I explain how to remotely setup a storage server with full disk enc
 image: https://mazzo.li/assets/images/hetzner-datacenterpark-fsn.jpg
 ---
 
-**Abstract:** I explain how to remotely setup a storage server with full disk encryption. The server is rented from [Hetzner](https://www.hetzner.com/), and many of the details are specific to Hetzner. The system is configured with [NixOS](https://nixos.org/), survives up to one disk failure, and is easy to operate without physical access to the machine. After setup we test the monitoring and redundancy of the server through a variety of tests.
+In this post, I explain how to remotely setup a storage server with full disk encryption. The server is rented from [Hetzner](https://www.hetzner.com/), and many of the details are specific to Hetzner. The system is configured with [NixOS](https://nixos.org/), survives up to one disk failure, and is easy to operate without physical access to the machine. After setup we test the monitoring and redundancy of the server through a variety of tests.
 
 ***
 

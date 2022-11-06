@@ -7,7 +7,7 @@ description: Systematically backing up WhatsApp messages and media in an open fo
 image: https://mazzo.li/assets/images/whatsapp-multi-device.png
 ---
 
-**Abstract:** Systematically backing up WhatsApp messages and media in an open format is impractical. However the [multi-device beta](https://faq.whatsapp.com/web/download-and-installation/how-to-join-or-leave-the-multi-device-beta/?lang=en) makes the WhatsApp web client an almost first-class WhatsApp client. I describe how the web client stores messages and media, and a proof of concept program, [`wadump`](https://github.com/bitonic/wadump), which can extract and display them.
+Systematically backing up WhatsApp messages and media in an open format is impractical. However the [multi-device beta](https://faq.whatsapp.com/web/download-and-installation/how-to-join-or-leave-the-multi-device-beta/?lang=en) makes the WhatsApp web client an almost first-class WhatsApp client. I describe how the web client stores messages and media, and a proof of concept program, [`wadump`](https://github.com/bitonic/wadump), which can extract and display them.
 
 ***
 

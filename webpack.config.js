@@ -1,6 +1,5 @@
 const path = require('path');
 const isDevelopment = process.env.NODE_ENV !== 'production';
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 console.log({
   isDevelopment,
@@ -63,7 +62,4 @@ module.exports = {
     liveReload: false,
     hot: false,
   },
-  plugins: [
-    new BundleAnalyzerPlugin(),
-  ],
 };
