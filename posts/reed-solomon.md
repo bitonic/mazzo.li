@@ -15,7 +15,7 @@ One obvious (and valid!) first attempt is to just store everything multiple time
 
 [^raid1]: This is often known as [RAID1](https://en.wikipedia.org/wiki/Standard_RAID_levels#RAID_1).
 
-[Reed-Solmon coding](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) gives us much more flexibility, allowing us to store our data over $n = k + t$ drives, so that _any $t$_ drives can fail while still not losing data.[^which-rs]
+[Reed-Solomon coding](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) gives us much more flexibility, allowing us to store our data over $n = k + t$ drives, so that _any $t$_ drives can fail while still not losing data.[^which-rs]
 
 [^which-rs]: This post presents a specific way to perform Reed-Solomon coding, using Lagrange interpolation. See the [Wikipedia article](https://en.wikipedia.org/wiki/Reed–Solomon_error_correction) for more information.
 
