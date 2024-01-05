@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import * as marked from "marked"
 import * as dompurify from "dompurify"
 import * as katex from "katex"
-import create from "zustand"
+import { create } from "zustand"
 
 function katexify(text: string) {
   const katexOpts: katex.KatexOptions = {
@@ -171,7 +171,7 @@ const Comment: React.FunctionComponent<CommentData & { post: string, inCommentLi
   const link = (el: React.ReactElement | null) => {
     if (el === null) { return null; }
     if (comment.operator) {
-      return <><a href="mazzo.li">{el}</a>, </>
+      return <><a href="https://mazzo.li">{el}</a>, </>
     }
     if (comment.link) {
       return <><a href={comment.link}>{el}</a>, </>
@@ -248,7 +248,9 @@ const useDraftStore = create<DraftState>((set) => ({
     return { body }
   }),
   password: "",
-  setPassword: (password: string) => set(() => ({ password }))
+  setPassword: (post, password: string) => {
+    return set(() => ({ password }));
+  }
 }))
 
 interface SubmitState {
@@ -261,6 +263,7 @@ function commentAnchor(id: string): string {
 }
 
 function linkify(link: string): string {
+  if (!link) { return link }
   const isEmail = String(link)
     .toLowerCase()
     .match(
@@ -304,6 +307,7 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
           link: linkify(draft.link),
           author: draft.author,
           body: draft.body,
+          password: draft.password,
         }
         const { id } = await newComment(post, { ...data })
         draft.setBody(post, "")
@@ -437,7 +441,7 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
         }}
       >
         <p>
-          Both name and email are optional, and will be visible if you provide them. Comments cannot be edited or deleted. <a href="mailto:f@mazzo.li">Email me</a> if you want to remove your comment.
+          Both name and email are optional, and will be visible if you provide them. Comments cannot be edited or deleted by you after submission, <a href="mailto:f@mazzo.li">Email me</a> if you need to do so.
         </p>
         <p>
           The comment will be rendered using a limited <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a>. You can input math by using <code>$inline$</code> or <code>$$block$$</code> LaTeX syntax.

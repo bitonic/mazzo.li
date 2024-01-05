@@ -253,7 +253,7 @@ The operations described above are protected by a lock, which `pipe_write` [acqu
 
 So, we now have a quite unpleasant picture of what is going on:
 
-* We copy each page twice, once from user memory to the kernel, and back again to the kernel to user memory;
+* We copy each page twice, once from user memory to the kernel, and back again from the kernel to user memory;
 * The copying is done one 4KiB page at a time, interspersed with other activity, such as the synchronization between read and write, and page allocation and freeing;
 * We are working with memory that might not be contiguous, since we're constantly allocating new pages;
 * We're acquiring and releasing the pipe lock.

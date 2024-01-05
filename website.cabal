@@ -15,7 +15,7 @@ Cabal-version:      >= 1.8
 Executable site
   Main-is:        site.hs
   Other-Modules:  KaTeXify
-  Ghc-options:    -Wall
+  Ghc-options:    -Wall -threaded
 
   Build-depends:
     base,

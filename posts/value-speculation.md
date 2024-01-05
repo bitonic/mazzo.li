@@ -329,7 +329,7 @@ These are the final numbers for our four functions:
 
 The numbers are provided [by the Linux `perf_event_open` syscall](https://gist.github.com/bitonic/78887f5d3238bab5e31f3c5a41d404b2#file-value-speculation-linux-c-L262).
 
-The first three datasets are meant to fit in the L1 / L2 / L3 cache. In those cases, the improvements are very pronounced, and `sum3` is crunching the data at around 4 instructions per second, which should be close to the limit on the processor I tested the code on. When the data does not fit in the cache, the bottleneck becomes filling it, and we process the data at roughly 15 GB/s.
+The first three datasets are meant to fit in the L1 / L2 / L3 cache. In those cases, the improvements are very pronounced, and `sum3` is crunching the data at around 4 instructions per cycle, which should be close to the limit on the processor I tested the code on. When the data does not fit in the cache, the bottleneck becomes filling it, and we process the data at roughly 15 GB/s.
 
 I believe that this is as fast as one can go with "simple" single-threaded reading from RAM,
 and it's consistent with data from `sysbench`:
