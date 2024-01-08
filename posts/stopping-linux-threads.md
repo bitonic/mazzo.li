@@ -15,7 +15,7 @@ Let's say you're writing a long running multi-threaded application,  on Linux. M
 
     Most of the content will also apply to any language beyond C and C++ which uses Linux threads directly, such as Rust's [`thread::spawn`](https://doc.rust-lang.org/std/thread/fn.spawn.html) and zig's `std::Thread::spawn`.
 
-Once you get into the business of starting threads, you're probably also in the business of stopping them. However the former is much easier than the latter. With "stopping" we mean stopping the thread while giving it a chance to run some cleanup operations before fully terminating. Or in other words, we want to terminate a thread while ensuring that memory is freed, locks are released, logs are flushed, and so on.[^cleanup]
+Once you get into the business of starting threads, you're probably also in the business of stopping them. However the former is much easier than the latter. With "stopping" I mean stopping the thread while giving it a chance to run some cleanup operations before fully terminating. Or in other words, we want to terminate a thread while ensuring that memory is freed, locks are released, logs are flushed, and so on.[^cleanup]
 
 [^cleanup]: In C++, cleanup will probably be done by way of destructors, in which case the goal becomes to stop a thread running all outstanding destructors before the thread terminates.
 
@@ -419,18 +419,24 @@ To recap, the problematic code [looks like this](https://gist.github.com/bitonic
 if (stop.load()) {
   break;
 } else {
-  // signal handler runs here, syscall gets stuck
+  // signal handler runs here, syscall blocks until
+  // packet arrives -- no prompt termination!
   recvlen = recvfrom(sock, buffer.data(), buffer.size(), 0, nullptr, nullptr);
 }
 ```
 
-If we could know that no signal handler is ran between the flag check and the syscall, then we'd be safe.
-
 <div>
 
-Linux 4.18 introduced a syscall, [`rseq`](/assets/other/rseq.html) ("restartable sequences"), which lets us achieve this, although with some effort.[^rseq-doc] The `rseq` machinery works as follows:
+If we could know that no signal handler is ran between the flag check and the syscall, then we'd be safe.
+
+Linux 4.18 introduced a syscall, [`rseq`](/assets/other/rseq.html) ("restartable sequences"),[^rseq-doc] which lets us achieve this, although with some effort.[^musl-hack] The `rseq` machinery works as follows:
 
 [^rseq-doc]: Documentation on `rseq` is still rather scant, but you can find a decent intruduction with a minimal example [here](https://www.efficios.com/blog/2019/02/08/linux-restartable-sequences/).
+
+[^musl-hack]: [PhantomZorba on lobste.rs](https://lobste.rs/s/ypck1n/how_stop_linux_threads_cleanly#c_gc7vsz) pointed out that a version of the trick described here is possible without `rseq` support, by checking the program counter from within the signal handler.
+
+    Not only that, `musl` implements race-free thread cancellation exactly this way. See previous discussions on the [LKML](https://yhbt.net/lore/all/06079088639eddd756e2092b735ce4a682081308.1457486598.git.luto@kernel.org/) and [lwn.net](https://lwn.net/Articles/683118/).
+
 
 * You write some code which you want to run atomically with regards to preemption or signals -- the critical section.
 
@@ -456,7 +462,7 @@ In our case the "commit instruction" is `syscall` -- the instruction which will 
 
 [^no-syscalls]: Note that a `rseq` critical sections cannot contain syscalls. However, if the very last instruction of the critical section is a syscall, we can never have the thread being in a syscall and in a critical section a the same time: once the `syscall` instruction runs and the syscall proper starts the program counter is already past the critical section.
 
-Which leads us to the following widget for a 6-argument syscall stub which atomically checks a stop flag and executes a `syscall`:
+Which leads us to the following x86-64 widget for a 6-argument syscall stub which atomically checks a stop flag and executes a `syscall`:
 
 </div>
 

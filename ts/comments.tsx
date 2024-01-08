@@ -441,7 +441,7 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
         }}
       >
         <p>
-          Both name and email are optional, and will be visible if you provide them. Comments cannot be edited or deleted by you after submission, <a href="mailto:f@mazzo.li">Email me</a> if you need to do so.
+          Both name and email are optional, and will be visible if you provide them. Comments cannot be edited or deleted by you after submission, <a href="mailto:f@mazzo.li">email me</a> if you need to do so.
         </p>
         <p>
           The comment will be rendered using a limited <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a>. You can input math by using <code>$inline$</code> or <code>$$block$$</code> LaTeX syntax.
