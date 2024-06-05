@@ -1,6 +1,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom/client";
 import * as marked from "marked"
+import { markedSmartypants } from "marked-smartypants";
 import * as dompurify from "dompurify"
 import * as katex from "katex"
 import { create } from "zustand"
@@ -135,7 +136,7 @@ const Comment: React.FunctionComponent<CommentData & { post: string, inCommentLi
   const bodyRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
     if (bodyRef.current === null) { return; }
-    let html = marked.marked(katexify(comment.body));
+    let html = marked.marked.parse(katexify(comment.body));
     html = dompurify.sanitize(
       html,
       {
@@ -497,6 +498,7 @@ const Comments: React.FunctionComponent<{
 }
 
 export function run(container: HTMLElement) {
+  marked.marked.use(markedSmartypants());
   const operator = new URL(document.URL).searchParams.has("operator")
   const post = parsePost()
   const root = ReactDOM.createRoot(container);

@@ -217,9 +217,7 @@ The answer is that thread cancellation will trigger a stack unwinding very much 
 
     There's also [other weirdness](https://udrepper.livejournal.com/21541.html) to be aware of when relying on this unwinding.
 
-Well, since thread cancellation is implemented using exceptions, and thread cancellation can happen in arbitrary places, [we're always liable to a cancellation happening in a `noexcept` block](https://gcc.gnu.org/legacy-ml/gcc/2017-08/msg00121.html), which is undefined behavior, and which in practice will cause your program to crash.[^sigabrt]
-
-[^sigabrt]: Ironically this is in turn done with a signal -- SIGABRT will be raised, which by default will result in the process terminating with a core dump.
+Well, since thread cancellation is implemented using exceptions, and thread cancellation can happen in arbitrary places, [we're always liable to a cancellation happening in a `noexcept` block](https://gcc.gnu.org/legacy-ml/gcc/2017-08/msg00121.html), which will cause your program to crash via [`std::terminate`](https://en.cppreference.com/w/cpp/error/terminate).
 
 So since C++11, and especially since C++14 where destructors are marked as `noexcept` by default, thread cancellation is essentially useless in C++.[^c-attribute-cleanup]
 
@@ -467,14 +465,9 @@ Which leads us to the following x86-64 widget for a 6-argument syscall stub whic
 </div>
 
 ```cpp
-// We only provide a wrapper for 6-argument syscalls here,
-// one would have to have wrappers for 1 to 6 arguments --
-// would be very easy to do so since the only thing that
-// changes is the parameter preparation.
-//
 // Returns -1 and sets errno to EINTR if `*stop` was true
 // before starting the syscall.
-long syscall_or_stop6(bool* stop, long n, long a, long b, long c, long d, long e, long f) {
+long syscall_or_stop(bool* stop, long n, long a, long b, long c, long d, long e, long f) {
   long ret;
   register long rd __asm__("r10") = d;
   register long re __asm__("r8")  = e;
@@ -543,7 +536,7 @@ long syscall_or_stop6(bool* stop, long n, long a, long b, long c, long d, long e
 // A version of recvfrom which atomically checks
 // the flag before running.
 static long recvfrom_or_stop(bool* stop, int socket, void* buffer, size_t length) {
-  return syscall_or_stop6(stop, __NR_recvfrom, socket, (long)buffer, length, 0, 0, 0);
+  return syscall_or_stop(stop, __NR_recvfrom, socket, (long)buffer, length, 0, 0, 0);
 }
 ```
 

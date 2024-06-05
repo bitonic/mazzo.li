@@ -89,6 +89,7 @@ isPublished (itemIdentifier -> ident) = do
   case publishedM of
     Nothing -> return True
     Just "false" -> return False
+    Just "true" -> return True
     Just s -> fail ("invalid `published' metadata value: " ++ s)
 
 renderFeed
