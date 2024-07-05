@@ -63,7 +63,7 @@ void rs_compute_parity(
   size_t size,
   uint8_t parity,    // high nibble = D, low nibble = P
   const char** data, // input, shape [D][size]
-  char* parity       // output, shape [P][size]
+  char** parity      // output, shape [P][size]
 );
 
 // Given at least `D` chunks (data or parity), recover
@@ -74,7 +74,7 @@ void rs_recover(
   uint32_t present,    // D+P wide bitmask, popcount(present) >= D
   uint32_t to_recover, // D+P wide bitmask, popcount(to_recover) <= P
   char** data,         // input/output, shape [D][size]
-  char* parity         // input/output, shape [P][size]
+  char** parity        // input/output, shape [P][size]
 );
 ```
 

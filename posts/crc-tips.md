@@ -112,7 +112,7 @@ $$
   & \; \texttt{10011010} \times \texttt{01011001} \\
 = & \; (1 + x^3 + x^4 + x^6) \times (x + x^3 + x^4 + x^7) \\
 = & \; x + x^3 + x^5 + x^6 + x^8 + x^9 + x^{11} + x^{13} \\
-= & \; (1 + x + x^3 + x^5)x^8 + x + x^3 + x^5 + x^6 \\
+= & \; (1 + x + x^3 + x^5) \times x^8 + x + x^3 + x^5 + x^6 \\
 = & \; \texttt{11010100 01010110} \\
 \end{split}
 \end{equation*}
@@ -404,7 +404,7 @@ uint32_t crc32c_append(uint32_t crc_a, size_t size_b, uint32_t crc_b) {
 
 The functions I presented are precisely the functions we needed for a distributed filesystem. However knowing that CRCs can be manipulated in this sort of way is useful in many circumstances.
 
-Fast software implementation of CRCs themselves rely on this kind of math. More generally, these functions come in handy whenever we need to distribute work on a block of checksummed data (maybe while implementing a [parallel decompressor](https://zlib.net/pigz/)), while still being able to check integrity.
+Fast software implementation of CRCs themselves rely on this kind of math. More generally, these functions come in handy whenever we need to distribute work on a block of checksummed data.
 
 ## Acknowledgements
 
