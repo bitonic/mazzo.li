@@ -8,6 +8,7 @@ summary, time, mark, audio, video {
     border: 0;
     font-variant: normal;
     font-size: 1em;
+    font-size-adjust: ex-height 0.53;
     margin: 0;
     outline: 0;
     padding: 0;
@@ -24,6 +25,11 @@ html {
 */
 html * {
   max-height:1000000px;
+}
+
+/* try to keep the katex stuff in line with the rest */
+.inline .katex {
+  font-size: 1em !important;
 }
 
 /*
