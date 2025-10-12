@@ -32,6 +32,7 @@
     "dompurify": "^2.4.0",
     "katex": "^0.13.9",
     "marked": "^4.1.1",
+    "marked-smartypants": "^1.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zustand": "^4.1.2"

@@ -178,7 +178,7 @@ http://mazzo.li/posts/{post_id}.html?operator#comment-{id}
         modify_comments(self.comments_dir, post_id, append_to_comments)
         return { 'id': id }
 
-    def remove_stale_tokes(self):
+    def remove_stale_tokens(self):
         to_delete = 0
         now = datetime.now()
         while to_delete < len(self.tokens) and (now - self.tokens[to_delete].time > timedelta(minutes=5)):
@@ -191,7 +191,7 @@ http://mazzo.li/posts/{post_id}.html?operator#comment-{id}
         return token
 
     def handle(self, env):
-        self.remove_stale_tokes()
+        self.remove_stale_tokens()
         if env['REQUEST_METHOD'] != 'POST':
             raise AbortRequest(405, 'Only POST allowed.')
         max_req_len = 1 * 1000 * 10 # 10KB

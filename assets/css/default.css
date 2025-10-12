@@ -26,6 +26,11 @@ html * {
   max-height:1000000px;
 }
 
+/* try to keep the katex stuff in line with the rest */
+.inline .katex {
+  font-size: 1em !important;
+}
+
 /*
   Instead, make fonts on high-DPI small screens bigger. This is kinda imperfect
   but seems to work OK. I test it with chrome responsive simulator in the dev
@@ -648,3 +653,4 @@ hr, ul, ol, .article .sourceCode, .article pre, .article h1, .article h2, .artic
 .comment blockquote {
   margin-left: 1rem;
 }
+

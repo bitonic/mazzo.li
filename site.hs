@@ -33,6 +33,16 @@ main = hakyll $ do -- Assets
       loadAndApplyTemplate "templates/default.html" postCtx >>=
       relativizeUrls
 
+  {-
+  -- Posts
+  match "code/*" $ do
+    route $ setExtension "html"
+    compile $ do
+      ext <- getUnderlyingExtension
+      compileGist "c" >>=
+      loadAndApplyTemplate "templates/gist.html" defaultContext
+  -}
+
   -- Archive
   create ["archive.html"] $ do
     route idRoute
@@ -89,6 +99,7 @@ isPublished (itemIdentifier -> ident) = do
   case publishedM of
     Nothing -> return True
     Just "false" -> return False
+    Just "true" -> return True
     Just s -> fail ("invalid `published' metadata value: " ++ s)
 
 renderFeed

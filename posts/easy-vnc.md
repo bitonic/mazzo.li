@@ -12,7 +12,7 @@ Let's say you [have a server without a graphics card,](/posts/hetzner-zfs.html) 
 2. Set `hardware.opengl.enable = true` in `/etc/nixos/configuration.nix`. This will create `/run/opengl-driver`, containing the shared libraries that OpenGL applications will need to load.
 3. Start the TurboVNC server with
 
-        server% Xvnc :30 -iglx -httpd "$(dirname $(readlink -f $(command -v Xvnc)))/../share/turbovnc/classes" -depth 24 -rfbwait 120000 -deferupdate 1 -localhost -verbose -securitytypes none
+        server% Xvnc :30 -iglx -depth 24 -rfbwait 120000 -deferupdate 1 -localhost -verbose -securitytypes none
 
 Note that the server will only listen to `localhost`, to defer security to SSH.
 
