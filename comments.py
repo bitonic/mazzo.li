@@ -9,10 +9,12 @@ from typing import Dict, Any, List
 from datetime import datetime, timezone
 import os
 import time
-import subprocess
 import secrets
 from datetime import datetime, timedelta
 import stat
+import sqlite3
+import smtplib
+import email.message
 
 @contextmanager
 def lock_comment_file(comments_dir: Path, post_id: str):
@@ -52,7 +54,6 @@ def modify_comments(comments_dir: Path, post_id: str, modify_comments):
 #   time: str,
 #   operator: bool, # Whether I have made the comment
 #   author: Optional[str],
-#   link: Optional[str],
 #   body: str,
 # }]
 #
@@ -79,9 +80,8 @@ def modify_comments(comments_dir: Path, post_id: str, modify_comments):
 #   tag: 'new',
 #   password: Optional[str], # if present, it's the author posting
 #   name: Optional[str],
-#   link: Optional[str],
+#   notifications_email: Optional[str], # if present, notify to this email on new replies
 #   body: str,
-#   parent: Optional[str],
 #   token: str,
 # }
 #
@@ -106,17 +106,35 @@ class Token:
     secret: str
 
 class App:
+    db_file: Path
+    db: sqlite3.Connection
     posts_dir: Path
     comments_dir: Path
-    password: str
+    operator_password: str
+    smtp_password: str
     tokens: List[Token]
 
-    def __init__(self, *, posts_dir: str, comments_dir: str, password: str, msmtp: str = 'msmtp'):
+    def _init_db(self):
+        self.db.row_factory = sqlite3.Row
+        cur = self.db.cursor()
+        cur.execute('pragma foreign_keys = ON')
+        cur.execute('pragma journal_mode = WAL')
+        cur.execute('''
+            create table if not exists notifications_emails (
+                post text not null,
+                email text not null,
+                primary key (post, email)
+            ) strict
+        ''')
+
+    def __init__(self, *, posts_dir: str, comments_dir: str, db_file: str, operator_password: str, smtp_password: str):
         self.posts_dir = Path(posts_dir)
         self.comments_dir = Path(comments_dir)
-        self.password = password
-        self.msmtp = msmtp
+        self.operator_password = operator_password
+        self.smtp_password = smtp_password
         self.tokens = []
+        self.db = sqlite3.connect(db_file)
+        self._init_db()
         assert self.posts_dir.is_dir()
         assert self.comments_dir.is_dir()
 
@@ -125,7 +143,7 @@ class App:
 
     def delete(self, post_id: str, req):
         password = validate_field(req, 'password', optional=True)
-        if password != self.password:
+        if password != self.operator_password:
             raise AbortRequest(401, 'Not authorized.')
         comment_id = validate_field(req, 'comment_id', optional=False)
         def delete_comment(comments):
@@ -136,6 +154,19 @@ class App:
         modify_comments(self.comments_dir, post_id, delete_comment)
         return []
     
+    def _send_email(self, *, server: smtplib.SMTP_SSL, post: str, comment_id: str, to: str, operator_link: bool, operator_post: bool, comment):  
+        by = ''
+        if author := comment.get('author'):
+            by = ' by ' + author
+        if operator_post:
+            by = 'by Francesco'
+        msg = email.message.EmailMessage()
+        msg['Subject'] = f'mazzo.li: new comment for post {post}{by}'
+        msg['From'] = 'f@mazzo.li'
+        msg['To'] = to
+        msg.set_content(f"http://mazzo.li/posts/{post}.html{'?operator' if operator_link else ''}#comment-{comment_id}\n\n{comment['body']}")
+        server.send_message(msg)
+
     def new(self, post_id: str, req):
         token = validate_field(req, 'token', optional=False)
         len_old_tokens = len(self.tokens)
@@ -145,11 +176,11 @@ class App:
         operator = False
         password = validate_field(req, 'password', optional=True)
         if password is not None:
-            if password != self.password:
+            if password != self.operator_password:
                 raise AbortRequest(401, 'Not authorized.')
             operator = True
         author = validate_field(req, 'author', optional=True)
-        link = validate_field(req, 'link', optional=True)
+        notifications_email = validate_field(req, 'notifications_email', optional=True)
         body = validate_field(req, 'body', optional=False)
         if not body:
             raise AbortRequest(400, 'Empty body')
@@ -159,24 +190,33 @@ class App:
             'time': datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             'operator': operator,
             'author': author,
-            'link': link,
             'body': body,
         }
-        email = f'''Subject: New comment for post {post_id}
-
-http://mazzo.li/posts/{post_id}.html?operator#comment-{id}
-
-{json.dumps(comment, indent=4)}
-'''
-        subprocess.run(
-            [self.msmtp, '-a', 'default', 'f@mazzo.li'],
-            input=email.encode('ascii'),
-        )
-        def append_to_comments(comments):
-            comments.append(comment)
-            return comments
-        modify_comments(self.comments_dir, post_id, append_to_comments)
-        return { 'id': id }
+        with smtplib.SMTP_SSL('smtp.fastmail.com', 465) as server:
+            server.login('bitonic@fastmail.com', self.smtp_password)
+            # Send operator email _before we add the comment_,
+            # we don't want to proceed unless I know that something
+            # is about to be posted.
+            self._send_email(server=server, post=post_id, comment_id=id, to='f@mazzo.li', operator_post=operator, operator_link=True, comment=comment)
+            # Add comment
+            def append_to_comments(comments):
+                comments.append(comment)
+                return comments
+            modify_comments(self.comments_dir, post_id, append_to_comments)
+            cur = self.db.cursor()
+            # Send non-operator emails (not including this one)
+            cur.execute('select email from notifications_emails where post = ?', (post_id,))
+            for row in cur.fetchall():
+                self._send_email(server=server, post=post_id, comment_id=id, to=row['email'], operator_post=operator, operator_link=False, comment=comment)
+            # Add email
+            if notifications_email:
+                cur.execute(
+                    'insert or ignore into notifications_emails (post, email) values (?, ?)',
+                    (post_id, notifications_email),
+                )
+                self.db.commit()
+            # We're done
+            return { 'id': id }
 
     def remove_stale_tokens(self):
         to_delete = 0
@@ -210,7 +250,7 @@ http://mazzo.li/posts/{post_id}.html?operator#comment-{id}
         post_id = req.get('post_id', '')
         # This protects us against any kind of path traversal
         if post_id not in self.posts():
-            raise AbortRequest(400, 'Post {repr(post_id)} not found')
+            raise AbortRequest(400, f'Post {repr(post_id)} not found')
         if tag == 'delete':
             return self.delete(post_id, req)
         if tag == 'new':

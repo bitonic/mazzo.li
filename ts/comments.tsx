@@ -58,7 +58,6 @@ interface CommentData {
   time: string,
   operator: boolean,
   author: string | null,
-  link: string | null,
   body: string,
 }
 
@@ -80,8 +79,8 @@ async function fetchCommentsData(post: string): Promise<CommentsData> {
 interface NewPost {
   password?: string,
   author?: string,
-  link?: string,
-  body: string,    
+  notifications_email?: string,
+  body: string,
 }
 
 async function newComment(post: string, data: NewPost): Promise<{ id: string }> {
@@ -169,16 +168,6 @@ const Comment: React.FunctionComponent<CommentData & { post: string, inCommentLi
   const author = comment.operator ?
     <span className="author operator">Francesco</span> :
     (comment.author ? <span className="author">{comment.author}</span> : null)
-  const link = (el: React.ReactElement | null) => {
-    if (el === null) { return null; }
-    if (comment.operator) {
-      return <><a href="https://mazzo.li">{el}</a>, </>
-    }
-    if (comment.link) {
-      return <><a href={comment.link}>{el}</a>, </>
-    }
-    return <>{el}, </>
-  }
   const doDeleteComment: React.MouseEventHandler<HTMLAnchorElement> = (ev) => {
     ev.preventDefault();
     const password = prompt("Password")!;
@@ -199,7 +188,7 @@ const Comment: React.FunctionComponent<CommentData & { post: string, inCommentLi
         fontSize: "1rem",
       }}
     >
-      {link(author)}<span className='comment-date'>{dateStr}</span> <br/>
+      {author} <span className='comment-date'>{dateStr}</span> <br/>
       {comment.id &&
         <small style={{marginBottom: "0.5rem", display: "block"}}>
           <a href="#" onClick={reply}>Reply</a>
@@ -218,8 +207,8 @@ const Comment: React.FunctionComponent<CommentData & { post: string, inCommentLi
 interface DraftState {
   author: string,
   setAuthor: (post: string, author: string) => void,
-  link: string,
-  setLink: (post: string, link: string) => void,
+  notificationsEmail: string,
+  setNotificationsEmail: (post: string, link: string) => void,
   body: string,
   setBody: (post: string, body: string) => void,
   prefixBody: (post: string, prefix: string) => void,
@@ -233,10 +222,10 @@ const useDraftStore = create<DraftState>((set) => ({
     localStorage.setItem(localStorageKey(post, "author"), author)
     return { author }
   }),
-  link: "",
-  setLink: (post: string, link: string) => set(() => {
-    localStorage.setItem(localStorageKey(post, "link"), link)
-    return { link }
+  notificationsEmail: "",
+  setNotificationsEmail: (post: string, notificationsEmail: string) => set(() => {
+    localStorage.setItem(localStorageKey(post, "notificationsEmail"), notificationsEmail)
+    return { notificationsEmail }
   }),
   body: "",
   setBody: (post: string, body: string) => set(() => {
@@ -263,22 +252,6 @@ function commentAnchor(id: string): string {
   return `comment-${id}`
 }
 
-function linkify(link: string): string {
-  if (!link) { return link }
-  const isEmail = String(link)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-  if (isEmail) {
-    return `mailto:${link}`
-  }
-  if (!link.startsWith('http://') && !link.startsWith('https://')) {
-    link = `https://${link}`
-  }
-  return link
-}
-
 const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => void, operator: boolean, post: string }>(({refreshComments, operator, post}, ref) => {
   const draft = useDraftStore((state) => ({...state}))
   const [state, setState] = React.useState<SubmitState>({
@@ -288,12 +261,12 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
   React.useEffect(
     () => {
       draft.setAuthor(post, localStorage.getItem(localStorageKey(post, "author")) || "")
-      draft.setLink(post, localStorage.getItem(localStorageKey(post, "link")) || "")
+      draft.setNotificationsEmail(post, localStorage.getItem(localStorageKey(post, "notificationsEmail")) || "")
       draft.setBody(post, localStorage.getItem(localStorageKey(post, "body")) || "")
     },
     [post]
   )
-  const setKey = (set: "setAuthor" | "setLink" | "setBody" | "setPassword"): React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> => (ev) => {
+  const setKey = (set: "setAuthor" | "setNotificationsEmail" | "setBody" | "setPassword"): React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> => (ev) => {
     draft[set](post, ev.target.value)
   }
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (ev) => {
@@ -305,10 +278,10 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
       setState((state) => { return { ...state, status: "submitting" }});
       (async () => {
         const data = {
-          link: linkify(draft.link),
           author: draft.author,
           body: draft.body,
           password: draft.password,
+          notifications_email: draft.notificationsEmail,
         }
         const { id } = await newComment(post, { ...data })
         draft.setBody(post, "")
@@ -335,7 +308,6 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
       post={post}
       operator={operator}
       author={draft.author}
-      link={linkify(draft.link)}
       body={draft.body}
       time={new Date().toISOString()}
       isOperator={false}
@@ -382,16 +354,15 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
             />
             <input
               id="author-link"
-              placeholder='Website or email'
+              placeholder='Email for reply notifications'
               style={{
                 gridColumnStart: "2",
                 gridColumnEnd: "3",
                 fontSize: "0.9rem",
                 padding: "0 0.25rem",
               }}
-              onChange={setKey("setLink")}
-              value={draft.author ? draft.link : ""}
-              disabled={!draft.author}
+              onChange={setKey("setNotificationsEmail")}
+              value={draft.notificationsEmail}
             />
           </>
         }
@@ -442,7 +413,10 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
         }}
       >
         <p>
-          Both name and email are optional, and will be visible if you provide them. Comments cannot be edited or deleted by you after submission, <a href="mailto:f@mazzo.li">email me</a> if you need to do so.
+          Providing a name is optional. You can also provide an email to get notifications on replies. If you do provide an email, it won't be publicly visible.
+        </p>
+        <p>
+          Comments cannot be edited or deleted by you after submission, <a href="mailto:f@mazzo.li">email me</a> if you need to do so.
         </p>
         <p>
           The comment will be rendered using a limited <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a>. You can input math by using <code>$inline$</code> or <code>$$block$$</code> LaTeX syntax.
