@@ -161,7 +161,7 @@ class App:
         if operator_post:
             by = 'by Francesco'
         msg = email.message.EmailMessage()
-        msg['Subject'] = f'mazzo.li: new comment for post {post}{by}'
+        msg['Subject'] = f'mazzo.li: new comment for post "{post}"{by}'
         msg['From'] = 'f@mazzo.li'
         msg['To'] = to
         msg.set_content(f"http://mazzo.li/posts/{post}.html{'?operator' if operator_link else ''}#comment-{comment_id}\n\n{comment['body']}")

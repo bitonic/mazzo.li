@@ -1,5 +1,5 @@
 ---
-title: Type Checking through Unification
+title: Type checking through unification
 date: 2016-10-03
 tags:
 - paper
