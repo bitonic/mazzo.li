@@ -63,17 +63,40 @@ interface CommentData {
 
 type CommentsData = CommentData[]
 
-async function fetchCommentsData(post: string): Promise<CommentsData> {
+type Success<T> = {
+  ok: true,
+  value: T,
+};
+type Failure = {
+  ok: false,
+  error: React.ReactNode,
+};
+type Result<T> = Success<T> | Failure;
+
+function success<T>(x: T): Success<T> {
+  return { ok: true, value: x };
+}
+function failure(error: React.ReactNode): Failure {
+  return { ok: false, error };
+}
+
+function statusFailure(what: string, resp: Response): Failure {
+  return failure(<>
+    {what}: <code>{resp.status} {resp.statusText}</code>
+  </>);
+}
+
+async function fetchCommentsData(post: string): Promise<Result<CommentsData>> {
   const resp = await fetch(`/assets/comments/${post}.json`, { cache: 'no-cache' })
   if (resp.status === 404) {
     // no comments yet
-    return []
+    return success([]);
   }
   if (!resp.ok) {
-    throw "Could not get JSON comments!"
+    return statusFailure('Could not get fetch comments', resp);
   }
   const txt = await resp.text()
-  return JSON.parse(txt)
+  return success(JSON.parse(txt));
 }
 
 interface NewPost {
@@ -83,7 +106,7 @@ interface NewPost {
   body: string,
 }
 
-async function newComment(post: string, data: NewPost): Promise<{ id: string }> {
+async function newComment(post: string, data: NewPost): Promise<Result<{ id: string }>> {
   const tokenResp = await fetch(
     "/comments-api",
     {
@@ -92,7 +115,7 @@ async function newComment(post: string, data: NewPost): Promise<{ id: string }> 
     }
   )
   if (!tokenResp.ok) {
-    throw "Could not get token!";
+    return statusFailure('Could not submit post', tokenResp);
   }
   const token = JSON.parse(await tokenResp.text())
   const body = {...data, post_id: post, tag: "new", token }
@@ -107,12 +130,17 @@ async function newComment(post: string, data: NewPost): Promise<{ id: string }> 
     }
   )
   if (!resp.ok) {
-    throw "Could not add new post!";
+    if (resp.status == 422) {
+      return failure(<>
+        Your post was detected as spam. Please <a href="mailto:f@mazzo.li">email me</a> if this was a mistake.
+      </>)
+    }
+    return statusFailure('Could not add new post', resp);
   }
   return JSON.parse(await resp.text())
 }
 
-async function deleteComment(post: string, id: string, password: string): Promise<void> {
+async function deleteComment(post: string, id: string, password: string): Promise<Result<void>> {
   const resp = await fetch(
     "/comments-api",
     {
@@ -126,8 +154,9 @@ async function deleteComment(post: string, id: string, password: string): Promis
     }
   )
   if (!resp.ok) {
-    throw "Could not delete post!";
+    return statusFailure('Could not delete post', resp);
   }
+  return success(undefined);
 }
 
 const Comment: React.FunctionComponent<CommentData & { post: string, inCommentList?: boolean, isOperator: boolean, refreshComments: () => void, scrollToTextarea?: () => void }> = (props) => {
@@ -246,6 +275,7 @@ const useDraftStore = create<DraftState>((set) => ({
 interface SubmitState {
   editing: boolean,
   status: "disarmed" | "armed" | "submitting",
+  error?: React.ReactNode,
 }
 
 function commentAnchor(id: string): string {
@@ -283,11 +313,15 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
           password: draft.password,
           notifications_email: draft.notificationsEmail,
         }
-        const { id } = await newComment(post, { ...data })
-        draft.setBody(post, "")
-        setState((state) => { return { ...state, editing: true, status: "disarmed" }})
-        location.hash = `#${commentAnchor(id)}`
-        await refreshComments()
+        const resp = await newComment(post, { ...data })
+        if (resp.ok) {
+          draft.setBody(post, "")
+          setState((state) => { return { ...state, editing: true, status: "disarmed" }})
+          location.hash = `#${commentAnchor(resp.value.id)}`
+          await refreshComments();
+        } else {
+          setState((state) => { return { ...state, error: resp.error }});
+        }
       })();
     } else if (state.status === "submitting") {
       // nothing to do            
@@ -303,7 +337,7 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
     }
   }
   return <>
-    {!state.editing && <Comment
+    {!state.editing && !state.error && <Comment
       refreshComments={refreshComments}
       post={post}
       operator={operator}
@@ -312,99 +346,101 @@ const Submit = React.forwardRef<HTMLTextAreaElement, { refreshComments: () => vo
       time={new Date().toISOString()}
       isOperator={false}
     />}
-    <form
-      className="submit"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "50% 50%",
-        gridTemplateRows: "1.4rem auto 1.4rem",
-        rowGap: "0.25rem",
-        columnGap: "0.25rem",
-        marginBottom: "0.5rem",
-      }}
-      onSubmit={onSubmit}
-      onBlur={disarm}
-      tabIndex={1}
-    >
-      {state.editing && <>
-        {operator ?
-          <input
-            placeholder='Password'
-            type='password'
-            style={{
-              gridColumnStart: "1",
-              gridColumnEnd: "3",
-              fontSize: "0.9rem",
-              padding: "0 0.25rem",
-            }}
-            onChange={setKey("setPassword")}
-            value={draft.password}
-          /> :
-          <>
+    {state.error ?
+      <span style={{color: "rgba(196, 4, 4, 1)", fontWeight: "bold", fontSize: "1.1em"}}>{state.error}</span> :
+      <form
+        className="submit"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "50% 50%",
+          gridTemplateRows: "1.4rem auto 1.4rem",
+          rowGap: "0.25rem",
+          columnGap: "0.25rem",
+          marginBottom: "0.5rem",
+        }}
+        onSubmit={onSubmit}
+        onBlur={disarm}
+        tabIndex={1}
+      >
+        {state.editing && <>
+          {operator ?
             <input
-              id="author-name" placeholder='Name'
+              placeholder='Password'
+              type='password'
               style={{
                 gridColumnStart: "1",
-                gridColumnEnd: "2",
-                fontSize: "0.9rem",
-                padding: "0 0.25rem",
-              }}
-              onChange={setKey("setAuthor")}
-              value={draft.author}
-            />
-            <input
-              id="author-link"
-              placeholder='Email for reply notifications'
-              style={{
-                gridColumnStart: "2",
                 gridColumnEnd: "3",
                 fontSize: "0.9rem",
                 padding: "0 0.25rem",
               }}
-              onChange={setKey("setNotificationsEmail")}
-              value={draft.notificationsEmail}
-            />
-          </>
-        }
-        <textarea
-          id="comment-body"
-          style={{
-            gridColumnStart: "1",
-            gridColumnEnd: "3",
-            resize: "vertical",
-            fontSize: "0.9rem",
+              onChange={setKey("setPassword")}
+              value={draft.password}
+            /> :
+            <>
+              <input
+                id="author-name" placeholder='Name'
+                style={{
+                  gridColumnStart: "1",
+                  gridColumnEnd: "2",
+                  fontSize: "0.9rem",
+                  padding: "0 0.25rem",
+                }}
+                onChange={setKey("setAuthor")}
+                value={draft.author}
+              />
+              <input
+                id="author-link"
+                placeholder='Email for reply notifications'
+                style={{
+                  gridColumnStart: "2",
+                  gridColumnEnd: "3",
+                  fontSize: "0.9rem",
+                  padding: "0 0.25rem",
+                }}
+                onChange={setKey("setNotificationsEmail")}
+                value={draft.notificationsEmail}
+              />
+            </>
+          }
+          <textarea
+            id="comment-body"
+            style={{
+              gridColumnStart: "1",
+              gridColumnEnd: "3",
+              resize: "vertical",
+              fontSize: "0.9rem",
+            }}
+            rows={7}
+            value={draft.body}
+            onChange={setKey("setBody")}
+            ref={ref}
+          />            
+        </>}
+        <button type="submit" disabled={!draft.body || state.status === "submitting"} style={{ fontSize: "0.9rem" }}>
+          {
+            state.status === "disarmed" ?
+            "Submit" :
+            state.status === "armed" ?
+            <strong>Are you sure?</strong> :
+            state.status === "submitting" ?
+            "Submitting..." :
+            impossible<string>(state.status)
+          }
+        </button>
+        <button
+          disabled={!draft.body}
+          onClick={(ev) => {
+            ev.preventDefault();
+            setState(state => {
+              return {...state, editing: !state.editing}
+            })
           }}
-          rows={7}
-          value={draft.body}
-          onChange={setKey("setBody")}
-          ref={ref}
-        />            
-      </>}
-      <button type="submit" disabled={!draft.body || state.status === "submitting"} style={{ fontSize: "0.9rem" }}>
-        {
-          state.status === "disarmed" ?
-          "Submit" :
-          state.status === "armed" ?
-          <strong>Are you sure?</strong> :
-          state.status === "submitting" ?
-          "Submitting..." :
-          impossible<string>(state.status)
-        }
-      </button>
-      <button
-        disabled={!draft.body}
-        onClick={(ev) => {
-          ev.preventDefault();
-          setState(state => {
-            return {...state, editing: !state.editing}
-          })
-        }}
-        style={{ fontSize: "0.9rem" }}
-      >
-        {state.editing ? "Preview" : "Edit"}
-      </button>
-    </form>
-    {state.editing &&
+          style={{ fontSize: "0.9rem" }}
+        >
+          {state.editing ? "Preview" : "Edit"}
+        </button>
+      </form>}
+    {(state.editing || state.error) &&
       <div
         className="footnotes footnotes-end-of-block"
         style={{
@@ -432,6 +468,7 @@ const Comments: React.FunctionComponent<{
   const { post } = props
   const [comments, setComments] = React.useState<{
     loading: boolean,
+    error?: React.ReactNode,
     firstLoaded: boolean,
     comments: CommentsData,
   }>({ loading: false, comments: [], firstLoaded: false })
@@ -440,7 +477,11 @@ const Comments: React.FunctionComponent<{
       setComments((state) => { return { ...state, loading: true }});
       (async () => {
         const comments = await fetchCommentsData(post)
-        setComments((state) => { return { ...state, loading: false, firstLoaded: true, comments }})    
+        if (comments.ok) {
+          setComments((state) => { return { ...state, loading: false, firstLoaded: true, comments: comments.value }});
+        } else {
+          setComments((state) => { return { ...state, error: comments.error }});
+        }
       })()
     },
     [post, setComments]
@@ -462,12 +503,16 @@ const Comments: React.FunctionComponent<{
       marginTop: "0",
     }}>
       Comments
-      {comments.loading &&
+      {comments.loading && !comments.error &&
         <span style={{color: "rgba(0,0,0,0.5)"}}> {comments.firstLoaded ? "(refreshing...)" : "(loading...)"}</span>}
     </h3>
-    {comments.comments.map(comment => <Comment post={post} refreshComments={loadComments} key={comment.id} inCommentList={true} isOperator={props.operator} scrollToTextarea={scrollToTextarea} {...comment} />)}
-    {comments.firstLoaded &&
-      <Submit ref={textareaRef} refreshComments={loadComments} {...props} />}
+    {comments.error ?
+      <span style={{color: "rgba(196, 4, 4, 1)", fontWeight: "bold", fontSize: "1.1em"}}>{comments.error}</span> :
+      <>
+        {comments.comments.map(comment => <Comment post={post} refreshComments={loadComments} key={comment.id} inCommentList={true} isOperator={props.operator} scrollToTextarea={scrollToTextarea} {...comment} />)}
+        {comments.firstLoaded &&
+          <Submit ref={textareaRef} refreshComments={loadComments} {...props} />}
+      </>}
   </>
 }
 

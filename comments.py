@@ -258,7 +258,7 @@ class App:
             if success and response_text == "false": # all good
                 return
             elif success:
-                raise AbortRequest(429, 'Spam message detected')
+                raise AbortRequest(422, 'Spam message detected')
             else:
                 raise AbortRequest(500, 'Could not check for spam')
 
