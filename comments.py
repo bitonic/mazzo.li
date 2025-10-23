@@ -5,7 +5,7 @@ import glob
 import fcntl
 import tempfile
 from dataclasses import dataclass
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Generator, Optional, Tuple
 from datetime import datetime, timezone
 import os
 import time
@@ -15,6 +15,10 @@ import stat
 import sqlite3
 import smtplib
 import email.message
+import json
+import threading
+import urllib.request
+import urllib.parse
 
 @contextmanager
 def lock_comment_file(comments_dir: Path, post_id: str):
@@ -41,6 +45,7 @@ def modify_comments(comments_dir: Path, post_id: str, modify_comments):
         with os.fdopen(tmp_fd, mode='w', encoding='utf-8') as tmp:
             json.dump(comments, tmp, indent=2)
             os.fsync(tmp)
+        # Technically we should fsync the directory after this
         os.rename(tmp_name, comments_file.name)
         
 # # JSON files schema
@@ -107,36 +112,74 @@ class Token:
 
 class App:
     db_file: Path
-    db: sqlite3.Connection
     posts_dir: Path
     comments_dir: Path
     operator_password: str
     smtp_password: str
+    askimet_api_key: str
     tokens: List[Token]
 
-    def _init_db(self):
-        self.db.row_factory = sqlite3.Row
-        cur = self.db.cursor()
-        cur.execute('pragma foreign_keys = ON')
-        cur.execute('pragma journal_mode = WAL')
-        cur.execute('''
-            create table if not exists notifications_emails (
-                post text not null,
-                email text not null,
-                primary key (post, email)
-            ) strict
-        ''')
+    def db_read(self) -> sqlite3.Cursor:
+        db = sqlite3.connect(self.db_file, autocommit=False)
+        db.row_factory = sqlite3.Row
+        return db.cursor()
 
-    def __init__(self, *, posts_dir: str, comments_dir: str, db_file: str, operator_password: str, smtp_password: str):
-        self.posts_dir = Path(posts_dir)
-        self.comments_dir = Path(comments_dir)
-        self.operator_password = operator_password
-        self.smtp_password = smtp_password
+    @contextmanager
+    def db_write(self) -> Generator[sqlite3.Connection, None, None]:
+        db = sqlite3.connect(self.db_file, autocommit=False)
+        db.row_factory = sqlite3.Row
+        try:
+            yield db
+        except Exception:
+            raise
+        else:
+            db.commit()
+
+    @contextmanager
+    def smtp_server(self) -> Generator[smtplib.SMTP_SSL, None, None]:
+        server = None
+        try:
+            server = smtplib.SMTP_SSL('smtp.fastmail.com', 465)
+            server.login('bitonic@fastmail.com', self.smtp_password)
+            yield server
+        finally:
+            if server:
+                server.quit()
+
+    def init_db(self):
+        with self.db_write() as db:
+            cur = db.cursor()
+            cur.execute('pragma foreign_keys = ON')
+            cur.execute('pragma journal_mode = WAL')
+            cur.execute('''
+                create table if not exists notifications_emails (
+                    post text not null,
+                    email text not null,
+                    primary key (post, email)
+                ) strict
+            ''')
+            cur.execute('''
+                create table if not exists outgoing_emails (
+                    to_ text not null,
+                    subject text not null,
+                    body text not null
+                ) strict
+            ''')
+
+    def __init__(self, *, config_file: str):
+        with open(config_file, 'rb') as f:
+            config = json.load(f)
+        self.posts_dir = Path(config['posts_dir'])
+        self.comments_dir = Path(config['comments_dir'])
+        self.operator_password = config['operator_password']
+        self.smtp_password = config['smtp_password']
+        self.askimet_api_key = config['askimet_api_key']
         self.tokens = []
-        self.db = sqlite3.connect(db_file)
-        self._init_db()
         assert self.posts_dir.is_dir()
         assert self.comments_dir.is_dir()
+        self.db_file = config['db_file']
+        self.init_db()
+        self.flush_emails()
 
     def posts(self):
         return set(map(lambda x: Path(x).stem, glob.glob(str(self.posts_dir / '*.html'))))
@@ -153,21 +196,96 @@ class App:
             return new_comments
         modify_comments(self.comments_dir, post_id, delete_comment)
         return []
+
+    @contextmanager
+    def smtp_server(self) -> Generator[smtplib.SMTP_SSL, None, None]:
+        server = None
+        try:
+            server = smtplib.SMTP_SSL('smtp.fastmail.com', 465)
+            server.login('bitonic@fastmail.com', self.smtp_password)
+            yield server
+        finally:
+            if server:
+                server.quit()
     
-    def _send_email(self, *, server: smtplib.SMTP_SSL, post: str, comment_id: str, to: str, operator_link: bool, operator_post: bool, comment):  
+    def queue_emails(self, emails: List[Tuple[str, str, str]]):
+        with self.db_write() as db:
+            db.executemany('insert or ignore into outgoing_emails (to_, subject, body) values (?, ?, ?)', emails)
+
+    def comment_email(self, *, post: str, comment_id: str, to: str, operator_link: bool, operator_post: bool, comment) -> Tuple[str, str, str]:
         by = ''
         if author := comment.get('author'):
             by = ' by ' + author
         if operator_post:
-            by = 'by Francesco'
+            by = ' by Francesco'
+        return (
+            to,
+            f'mazzo.li: new comment for post "{post}"{by}',
+            f"http://mazzo.li/posts/{post}.html{'?operator' if operator_link else ''}#comment-{comment_id}\n\n{comment['body']}",
+        )
+
+    def send_email(self, *, server: smtplib.SMTP_SSL, to: str, subject: str, body: str):
         msg = email.message.EmailMessage()
-        msg['Subject'] = f'mazzo.li: new comment for post "{post}"{by}'
+        msg['Subject'] = subject
         msg['From'] = 'f@mazzo.li'
         msg['To'] = to
-        msg.set_content(f"http://mazzo.li/posts/{post}.html{'?operator' if operator_link else ''}#comment-{comment_id}\n\n{comment['body']}")
+        msg.set_content(body)
         server.send_message(msg)
 
-    def new(self, post_id: str, req):
+    def check_spam(self, *, env, post_id: str, comment, notifications_email):
+        # https://akismet.com/developers/detailed-docs/comment-check/
+        parameters = {
+            'api_key': self.askimet_api_key,
+            'blog': 'https://mazzo.li/archive.html',
+            'user_ip': env.get('HTTP_X_FORWARDED_FOR', '').split(',')[-1],
+            'user_agent': env.get('HTTP_USER_AGENT', ''),
+            'comment_type': 'comment',
+            'comment_content': comment['body'],
+            'permalink': f'https://mazzo.li/{post_id}.html'
+        }
+        if comment['author']:
+            parameters['comment_author'] = comment['author']
+        if notifications_email:
+            parameters['comment_author_email'] = notifications_email
+        # validating for operator messages to test that this API call works
+        if comment['operator']:
+            parameters['user_role'] = 'administrator'
+        req = urllib.request.Request(url='https://rest.akismet.com/1.1/comment-check', data=urllib.parse.urlencode(parameters).encode('utf-8'))
+        with urllib.request.urlopen(req) as resp:
+            success = resp.status >= 200 and resp.status < 300
+            response_text = resp.read().decode('utf-8').strip()
+            print('REMOVE', repr(response_text))
+            if success and response_text == "false": # all good
+                return
+            elif success:
+                raise AbortRequest(429, 'Spam message detected')
+            else:
+                raise AbortRequest(500, 'Could not check for spam')
+
+    def flush_emails(self):
+        with self.db_write() as db:
+            cur = db.cursor()
+            cur.execute('select rowid, to_, subject, body from outgoing_emails')
+            emails = list(cur.fetchall())
+            with self.smtp_server() as server:
+                for email in emails:
+                    self.send_email(server=server, to=email['to_'], subject=email['subject'], body=email['body'])
+                    cur.execute('delete from outgoing_emails where rowid = ?', (email['rowid'],))
+    
+    def notification_emails(self, post_id: str):
+        cur = self.db_read()
+        cur.execute('select email from notifications_emails where post = ?', (post_id,))
+        return [row['email'] for row in cur.fetchall()]
+
+    def add_notifications_email(self, *, post_id: str, email: str):
+        with self.db_write() as db:
+            db.execute(
+                'insert or ignore into notifications_emails (post, email) values (?, ?)',
+                (post_id, email),
+            )
+
+    def new(self, env, post_id: str, req):
+        # Validate fields
         token = validate_field(req, 'token', optional=False)
         len_old_tokens = len(self.tokens)
         self.tokens = list(filter(lambda tk: tk.secret != token, self.tokens))
@@ -192,31 +310,30 @@ class App:
             'author': author,
             'body': body,
         }
-        with smtplib.SMTP_SSL('smtp.fastmail.com', 465) as server:
-            server.login('bitonic@fastmail.com', self.smtp_password)
-            # Send operator email _before we add the comment_,
-            # we don't want to proceed unless I know that something
-            # is about to be posted.
-            self._send_email(server=server, post=post_id, comment_id=id, to='f@mazzo.li', operator_post=operator, operator_link=True, comment=comment)
-            # Add comment
-            def append_to_comments(comments):
-                comments.append(comment)
-                return comments
-            modify_comments(self.comments_dir, post_id, append_to_comments)
-            cur = self.db.cursor()
-            # Send non-operator emails (not including this one)
-            cur.execute('select email from notifications_emails where post = ?', (post_id,))
-            for row in cur.fetchall():
-                self._send_email(server=server, post=post_id, comment_id=id, to=row['email'], operator_post=operator, operator_link=False, comment=comment)
-            # Add email
-            if notifications_email:
-                cur.execute(
-                    'insert or ignore into notifications_emails (post, email) values (?, ?)',
-                    (post_id, notifications_email),
-                )
-                self.db.commit()
-            # We're done
-            return { 'id': id }
+        # Check for spam
+        self.check_spam(env=env, post_id=post_id, comment=comment, notifications_email=notifications_email)
+        # Ok, we can proceed
+        print(f'Adding comment post={post_id} author={author} operator={operator}')
+        # Add comment
+        def append_to_comments(comments):
+            comments.append(comment)
+            return comments
+        modify_comments(self.comments_dir, post_id, append_to_comments)
+        # Queue emails
+        emails = [
+            self.comment_email(post=post_id, comment_id=id, to='f@mazzo.li', operator_post=operator, operator_link=True, comment=comment),
+        ]
+        for email in self.notification_emails(post_id):
+            emails.append(self.comment_email(post=post_id, comment_id=id, to=email, operator_post=operator, operator_link=False, comment=comment))
+        self.queue_emails(emails)
+        # Add email if necessary
+        if notifications_email:
+            self.add_notifications_email(post_id=post_id, email=notifications_email)
+        # Defer email flush, since it's actually pretty slow. We run the risk of failing to send
+        # emails, which is not great.
+        threading.Thread(target=lambda: self.flush_emails()).start()
+        # We're done
+        return { 'id': id }
 
     def remove_stale_tokens(self):
         to_delete = 0
@@ -254,14 +371,26 @@ class App:
         if tag == 'delete':
             return self.delete(post_id, req)
         if tag == 'new':
-            return self.new(post_id, req)
+            return self.new(env, post_id, req)
         raise AbortRequest(400, 'Bad JSON')
+
+    def send_error_email(self, env, err):
+        print(f'Request failed with error {err}, sending email')
+        with self.smtp_server() as server:
+            self.send_email(
+                server=server, to='f@mazzo.li', subject=f'mazzo.li comments error {err}',
+                body=str(err) + '\n\n' + str(env)
+            )
 
     def __call__(self, env, start_response):
         try:
             result = self.handle(env)
         except AbortRequest as err:
             start_response(f'{err.code}', [('Content-Type', 'application/json')])
+            self.send_error_email(env, err)
             return [json.dumps(err.msg).encode('ascii')]
+        except Exception as err:
+            self.send_error_email(env, err)
+            raise err
         start_response('200 OK', [('Content-Type', 'application/json')])
         return [json.dumps(result).encode('ascii')]
