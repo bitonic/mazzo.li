@@ -241,7 +241,7 @@ class App:
             'user_agent': env.get('HTTP_USER_AGENT', ''),
             'comment_type': 'comment',
             'comment_content': comment['body'],
-            'permalink': f'https://mazzo.li/{post_id}.html'
+            'permalink': f'https://mazzo.li/posts/{post_id}.html'
         }
         if comment['author']:
             parameters['comment_author'] = comment['author']
